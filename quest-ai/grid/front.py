@@ -1,7 +1,11 @@
-from grid import back
-from grid import colors
-
 from tkinter import *
+
+if __name__ == '__main__':
+	import back
+	import colors
+else:
+	from grid import back
+	from grid import colors
 
 
 # grid

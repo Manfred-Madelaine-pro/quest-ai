@@ -1,4 +1,8 @@
-from grid import cell
+
+try:
+	from grid import cell
+except ImportError:
+	import cell
 
 
 class GenericGrid:
