@@ -1,8 +1,8 @@
 
 try:
-	from grid import cell
-except ImportError:
 	import cell
+except ImportError:
+	from back import cell
 
 
 class GenericGrid:
@@ -38,7 +38,8 @@ class GenericGrid:
 
 	def __init_entities(self):
 		# TODO create living beings
-		pass
+		self.entities = []
+		self.entities += [{"name":"toto", "x": 0, "y": 0}]
 
 
 	def start(self):

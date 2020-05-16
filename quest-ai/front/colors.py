@@ -3,6 +3,13 @@ import random
 import colorsys
 
 
+MAX_RGB = 255
+MAX_HUE = 360
+MAX_LIGHTNESS = 100
+MAX_SATURATION = 100
+    
+REGEX = r'hsl\(\s*(\d+),\s*(\d+)%,\s*(\d+)%\s*\)'
+
 # RED = 0
 # ORANGE = 40
 # CYAN = 200
@@ -38,10 +45,20 @@ def generate_hsl(h, s, l):
 
 
 def convert_hsl_to_hex(hsl):
-    regex = r'hsl\(\s*(\d+),\s*(\d+)%,\s*(\d+)%\s*\)'
-    color = re.findall(regex,hsl)[0]
-    rgb = colorsys.hls_to_rgb(int(color[0])/360,int(color[2])/100,int(color[1])/100)
-    hex = '#%02x%02x%02x'%(round(rgb[0]*255),round(rgb[1]*255),round(rgb[2]*255))
+    color = re.findall(REGEX,hsl)[0]
+    
+    rgb = colorsys.hls_to_rgb(
+        int(color[0])/MAX_HUE, 
+        int(color[2])/MAX_SATURATION, 
+        int(color[1])/MAX_LIGHTNESS
+    )
+
+    hex = '#%02x%02x%02x'%(
+        round(rgb[0]*MAX_RGB),
+        round(rgb[1]*MAX_RGB),
+        round(rgb[2]*MAX_RGB)
+    )
+
     return hex
 
 

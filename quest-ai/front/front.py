@@ -1,11 +1,11 @@
 from tkinter import *
 
-if __name__ == '__main__':
-	import back
+from back import back
+
+try:
 	import colors
-else:
-	from grid import back
-	from grid import colors
+except ImportError:
+	from front import colors
 
 
 # grid
@@ -77,14 +77,25 @@ class FrontGrid:
 	def __update_screen(self):
 		# update grid
 		self.back_grid.update()
-		self.__draw()
+		self.__draw_spheres()
+		self.__draw_tiles()
 
 		# callback
 		if not self.back_grid.is_complete:
 			self.f.after(REFRESH_DELAY, self.__update_screen)
 	
 
-	def __draw(self):
+	def __draw_spheres(self):
+		self.front_sphere = []
+		e = self.back_grid.entities[0]
+		# create sphere
+
+		# move sphere
+		print(e["name"])
+
+
+
+	def __draw_tiles(self):
 		for i in range(self.width):
 			for j in range(self.length):
 				label = self.back_grid.grid[i][j].label
