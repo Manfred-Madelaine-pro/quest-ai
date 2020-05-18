@@ -1,11 +1,12 @@
 
 try:
-	import cell
+	import entity
 except ImportError:
-	from back import cell
+	from back import entity
 
 
-class GenericGrid:
+class Model:
+
 	def __init__(self, width, length):
 		global WIDTH
 		global LENGTH
@@ -13,55 +14,77 @@ class GenericGrid:
 		WIDTH = width
 		LENGTH = length
 
-		self.__init_grid()
-		self.__init_life()
+		self.init_cells()
+		self.init_life()
 
-	def __init_grid(self):
-		self.grid = []
+
+	def init_cells(self):
+		self.cells = {}
 		self.is_complete = False
 
 		for x in range(WIDTH):
-			row = []
 			for y in range(LENGTH):
-				c = cell.Cell(x, y)
-				row.append(c)
-			self.grid.append(row)
+				c = entity.Cell(x, y)
+				self.cells[(x, y)] = c
 
-	def __init_life(self):
-		self.__init_cells()
-		self.__init_entities()
 
-	def __init_cells(self):
+	def init_life(self):
+		self.generate_cells()
+		self.init_beings()
+
+
+	def generate_cells(self):
 		for x in range(WIDTH):
 			for y in range(LENGTH):
-				self.grid[x][y].generate()
+				self.cells[(x, y)].generate()
 
-	def __init_entities(self):
-		# TODO create living beings
-		self.entities = []
-		self.entities += [{"name":"toto", "x": 0, "y": 0}]
+
+	def init_beings(self):
+		# TODO
+		self.dead_names = []
+		self.beings = {i: entity.Being(i, i, 0) for i in range(WIDTH)}
 
 
 	def start(self):
 		self.is_complete = False
 
 	def update(self):
-		self.update_entities()
+		self.remove_beings()
+		self.dead_names = []
+
+		self.update_beings()
+		# self.update_cells() TODO
 
 	def stop(self):
-		print("End Puzzle.")
+		print("End Simulation.")
 		self.is_complete = True
 
 
-	def update_entities(self):
-		# update entities (characters)
-		# update cells
-		pass
+	def update_beings(self):
+		for being in self.beings.values():
+			being.update()
+
+			if self.out_of_bound(being):
+				self.save_dead_being(being)
+
+	def out_of_bound(self, being):
+		return being.x/3 > WIDTH or being.y/3 > LENGTH
+
+	def save_dead_being(self, being):
+		self.dead_names += [being.u_name]
+
+	def remove_beings(self):
+		for name in self.dead_names:
+			dead = self.beings.pop(name)
+			
+			print(f"{dead.u_name} ({dead.x}, {dead.y}) died at the age of {dead.age}!")
+
 
 	def update_cells(self):
+		# TODO
 		# update water (specific pattern)
 		# update food
 
 		for x in range(WIDTH):
 			for y in range(LENGTH):
-				self.grid[x][y].update()
+				self.cells[(x, y)].update()

@@ -10,14 +10,11 @@ MAX_SATURATION = 100
     
 REGEX = r'hsl\(\s*(\d+),\s*(\d+)%,\s*(\d+)%\s*\)'
 
-# RED = 0
-# ORANGE = 40
-# CYAN = 200
-# PURPLE = 280
-
+RED = (0, 100, 40)
+BLUE = (225, 100, 40)
 BROWN = (29, 100, 30)
 GREEN = (120, 100, 36)
-BLUE = (225, 100, 40)
+YELLOW = (50, 100, 45)
 
 
 def get_hex(hsl):
@@ -25,23 +22,23 @@ def get_hex(hsl):
 
 
 def get_color_with_random_lightness(hsl):
+    delta = 20
     h, s, l = hsl
 
-    delta = 20
     d = random.randint(0, delta)
-
     l = (l+d) if (random.randint(0, 10) > 8) else (l-d)
 
     return get_hsl_to_hex(h, s, l)
 
 
+def random_color_in_list(color_list):
+    color = random.choice(color_list)
+    return get_color_with_random_lightness(color)
+
+
 def get_hsl_to_hex(h, s, l):
-    color = generate_hsl(h, s, l)
+    color = f"hsl({h}, {s}%, {l}%)"
     return convert_hsl_to_hex(color)
-
-
-def generate_hsl(h, s, l):
-    return f"hsl({h}, {s}%, {l}%)"
 
 
 def convert_hsl_to_hex(hsl):
@@ -58,16 +55,13 @@ def convert_hsl_to_hex(hsl):
         round(rgb[1]*MAX_RGB),
         round(rgb[2]*MAX_RGB)
     )
-
     return hex
 
 
 if __name__ == '__main__':
-    h = 20
-    s = 80
-    l = 70
+    hsl = (20, 80, 20)
 
-    color = get_hsl_to_hex(h, s, l)
+    color = get_hsl_to_hex(*hsl)
     color = get_color_with_random_lightness(BLUE)
     print(color)
 
