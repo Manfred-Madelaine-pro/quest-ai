@@ -1,8 +1,8 @@
-from front import front
+from front.front import *
 
 
 WIDTH = 20
 LENGTH = WIDTH
 
 
-FrontGrid = front.FrontGrid(WIDTH, LENGTH)
+Front(WIDTH, LENGTH)

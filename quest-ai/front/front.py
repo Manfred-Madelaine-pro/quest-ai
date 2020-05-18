@@ -3,54 +3,33 @@ from tkinter import *
 from back import back
 
 try:
+	import screen
 	import colors
 except ImportError:
+	from front import screen 
 	from front import colors
 
 
-# grid
-WIDTH = 9
-LENGTH = WIDTH
-
 MARGIN = 2
-WINDOW_SIZE = 600
-
-# colors
-BACKGROUND = 'white'
-MIDDLEGROUD = 'grey'
-FOREGROUD = 'black'
 
 
-REFRESH_DELAY = 100
+class Front(screen.GenericScreen):
 
-
-class FrontGrid:
 	def __init__(self, width, length):
-		self.f = Tk()
-		self.f.title('Generic Grid')
-		
-		self.width = width
-		self.length = length
-		self.cell_size = WINDOW_SIZE/self.width
-		
+		super().__init__(width, length)
+
+		self.f.title('Quest AI')
 		self.being_size = self.cell_size/2
 		self.being_step = self.being_size/2
 
-		self.canvas = Canvas(
-						self.f, 
-						width=self.width * self.cell_size, 
-						height=self.length * self.cell_size, 
-						background=BACKGROUND)
-		self.canvas.pack()
-		
-		self.__init_entities()
-		self.__create_access_buttons()
-		self.__bind_shortcuts()
+		self.init_entities()
+		super().create_access_buttons()
+		super().bind_shortcuts()
 		
 		self.f.mainloop()
 		
 
-	def __init_entities(self):
+	def init_entities(self):
 		self.front_cells = {}
 		self.front_beings = {}
 
@@ -60,47 +39,27 @@ class FrontGrid:
 				y0 = j*self.cell_size + MARGIN
 				x1 = self.cell_size*self.width - MARGIN
 				y1 = self.cell_size*self.width - MARGIN
-				rect_id = self.canvas.create_rectangle(x0, y0, x1, y1, fill=BACKGROUND)
+				rect_id = self.canvas.create_rectangle(x0, y0, x1, y1, fill='white')
 
 				self.canvas.itemconfig(rect_id, tags=(str(i+1), str(j+1)))
 				self.front_cells[(i,j)] = rect_id
 
-	def __create_access_buttons(self):
 
-		def create_button(f, txt, command, s):
-			b = Button(f, text=txt, command=command)
-			b.pack(side=s, padx=5, pady=5)
-
-		create_button(self.f, 'Bring to Life', self.__init_univers, LEFT)
-		create_button(self.f, 'Play', self.__update_creation, LEFT)
-		create_button(self.f, 'Stop', self.__stop_creation, LEFT)
-
-	def __init_univers(self):
-		self.back_grid = back.GenericGrid(self.width, self.length)
-		self.__update_creation()
-	def __update_creation(self):
-		self.back_grid.start()
-		self.f.after(REFRESH_DELAY, self.__update_screen)
-	def __stop_creation(self):
-		self.back_grid.stop()
-
-
-	def __update_screen(self):
-		# update grid
-		self.back_grid.update()
-		self.__draw_beings()
-		self.__draw_cells()
-
-		# callback
-		if not self.back_grid.is_complete:
-			self.f.after(REFRESH_DELAY, self.__update_screen)
+# ------------------------- Overrided Methods --------------------------------
 	
+	def init_world(self):
+		self.back_model = back.Model(self.width, self.length)
 
-# ---------------------------------------------------------
+	def update(self):
+		self.back_model.update()
+		self.draw_beings()
+		self.draw_cells()
 
-	def __draw_beings(self):
-		for being in self.back_grid.beings.values():
-			if being.u_name in self.back_grid.dead_names:
+# --------------------------------------------------------------------------
+
+	def draw_beings(self):
+		for being in self.back_model.beings.values():
+			if being.u_name in self.back_model.dead_names:
 				self.remove_beings(being.u_name)
 			elif being.u_name not in self.front_beings:
 				self.create_beings(being)
@@ -113,10 +72,13 @@ class FrontGrid:
 			being.y*self.being_step, 
 			being.x*self.being_step + self.being_size,
 			being.y*self.being_step + self.being_size,
-			fill='red'
+			fill=self.get_being_color()
 		)
 		self.front_beings[being.u_name] = being_id
 	
+	def get_being_color(self):
+		return colors.random_color_in_list([colors.RED, colors.YELLOW])
+
 	def remove_beings(self, u_name):
 		print(f"Removed {u_name}!")
 		self.canvas.delete(self.front_beings[u_name])
@@ -128,10 +90,10 @@ class FrontGrid:
 
 # ---------------------------------------------------------
 
-	def __draw_cells(self):
+	def draw_cells(self):
 		for i in range(self.width):
 			for j in range(self.length):
-				label = self.back_grid.cells[i][j].label
+				label = self.back_model.cells[(i,j)].label
 				if label == 'water':
 					self.change_color(i, j, colors.BLUE, rand=True)
 				elif label == 'plant':
@@ -150,28 +112,10 @@ class FrontGrid:
 
 # ---------------------------------------------------------
 
-	def __bind_shortcuts(self):
-		self.f.bind('<q>', self.__quit)
-		self.f.bind('<Escape>', self.__quit)
-		self.f.bind('<b>', self.__update_creation_bind)
-		self.f.bind('<x>', self.__start_bind)
-		self.f.bind('<space>', self.__stop_bind)
-
-	def __update_creation_bind(self, key):
-		self.__init_univers()
-	def __start_bind(self, key):
-		self.__play_creation()
-	def __stop_bind(self, key):
-		self.__stop_creation()
-	def __quit(self, key):
-		self.f.destroy()
-
-
-
-# ---------------------------------------------------------
-
 if __name__ == '__main__':
-	FrontGrid = FrontGrid(WIDTH, LENGTH)
+	width = 9
+	length = width
+	front = Front(width, length)
 
 
 	

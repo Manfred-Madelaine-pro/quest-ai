@@ -5,7 +5,8 @@ except ImportError:
 	from back import entity
 
 
-class GenericGrid:
+class Model:
+
 	def __init__(self, width, length):
 		global WIDTH
 		global LENGTH
@@ -13,31 +14,33 @@ class GenericGrid:
 		WIDTH = width
 		LENGTH = length
 
-		self.__init_cells()
-		self.__init_life()
+		self.init_cells()
+		self.init_life()
 
-	def __init_cells(self):
-		# TODO use a dict !!!!
-		self.cells = []
+
+	def init_cells(self):
+		self.cells = {}
 		self.is_complete = False
 
 		for x in range(WIDTH):
-			row = []
 			for y in range(LENGTH):
 				c = entity.Cell(x, y)
-				row.append(c)
-			self.cells.append(row)
+				self.cells[(x, y)] = c
 
-	def __init_life(self):
-		self.__generate_cells()
-		self.__init_beings()
 
-	def __generate_cells(self):
+	def init_life(self):
+		self.generate_cells()
+		self.init_beings()
+
+
+	def generate_cells(self):
 		for x in range(WIDTH):
 			for y in range(LENGTH):
-				self.cells[x][y].generate()
+				self.cells[(x, y)].generate()
 
-	def __init_beings(self):
+
+	def init_beings(self):
+		# TODO
 		self.dead_names = []
 		self.beings = {i: entity.Being(i, i, 0) for i in range(WIDTH)}
 
@@ -50,7 +53,7 @@ class GenericGrid:
 		self.dead_names = []
 
 		self.update_beings()
-		# self.update_cells()
+		# self.update_cells() TODO
 
 	def stop(self):
 		print("End Simulation.")
@@ -78,9 +81,10 @@ class GenericGrid:
 
 
 	def update_cells(self):
+		# TODO
 		# update water (specific pattern)
 		# update food
 
 		for x in range(WIDTH):
 			for y in range(LENGTH):
-				self.cells[x][y].update()
+				self.cells[(x, y)].update()
