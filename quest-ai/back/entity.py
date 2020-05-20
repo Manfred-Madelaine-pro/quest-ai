@@ -18,6 +18,12 @@ class Entity:
 
 		self.water = water
 
+	def __repr__(self):
+		return "{}".format(self.v)
+
+	def __str__(self):
+		return "({},{})".format(self.x, self.y)
+
 
 # ---------------------------------------------------------
 
@@ -28,12 +34,6 @@ class Cell (Entity):
 		self.label = ''
 
 		self.plant = 0
-
-	def __repr__(self):
-		return "{}".format(self.v)
-
-	def __str__(self):
-		return "({},{})".format(self.x, self.y)
 
 
 	def generate(self):
@@ -69,7 +69,7 @@ class Being (Entity):
 
 	def update(self):
 		# self.move_random()
-		self.move_fix()
+		# self.move_fix()
 		self.age += 1
 
 

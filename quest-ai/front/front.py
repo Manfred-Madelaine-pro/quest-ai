@@ -19,8 +19,9 @@ class Front(screen.GenericScreen):
 		super().__init__(width, length)
 
 		self.f.title('Quest AI')
-		self.being_size = self.cell_size/2
-		self.being_step = self.being_size/2
+
+		self.being_size = self.cell_size
+		self.being_step = self.being_size
 
 		self.init_entities()
 		super().create_access_buttons()
@@ -30,9 +31,9 @@ class Front(screen.GenericScreen):
 		
 
 	def init_entities(self):
-		self.front_cells = {}
 		self.front_beings = {}
 
+		self.front_cells = {}
 		for i in range(self.width):
 			for j in range(self.length):
 				x0 = i*self.cell_size + MARGIN
@@ -66,26 +67,37 @@ class Front(screen.GenericScreen):
 			else:
 				self.change_pos(being.u_name, being.x, being.y)
 
-	def create_beings(self, being):
-		being_id = self.canvas.create_oval(
-			being.x*self.being_step, 
-			being.y*self.being_step, 
-			being.x*self.being_step + self.being_size,
-			being.y*self.being_step + self.being_size,
-			fill=self.get_being_color()
-		)
-		self.front_beings[being.u_name] = being_id
-	
-	def get_being_color(self):
-		return colors.random_color_in_list([colors.RED, colors.YELLOW])
-
 	def remove_beings(self, u_name):
 		print(f"Removed {u_name}!")
 		self.canvas.delete(self.front_beings[u_name])
 		del self.front_beings[u_name]
+
+	def create_beings(self, being):
+		front_x, front_y = self.get_front_pos(being.x, being.y)
+		being_id = self.canvas.create_oval(
+			front_x,
+			front_y,
+			front_x + self.being_size,
+			front_y + self.being_size,
+			fill=self.get_being_color()
+		)
+		self.front_beings[being.u_name] = being_id
 	
+	def get_front_pos(self, x, y):
+		return x*self.being_step, y*self.being_step
+	
+	def get_being_color(self):
+		return colors.random_color_in_list([colors.RED, colors.YELLOW])
+
 	def change_pos(self, u_name, new_x, new_y):
-		self.canvas.move(self.front_beings[u_name], new_x, new_y)
+		old_x, old_y, old_x2, old_y2 = self.canvas.coords(self.front_beings[u_name])
+		front_x, front_y = self.get_front_pos(new_x, new_y)
+		
+		d_x, d_y = self.get_delta_pos(old_x, old_y, front_x, front_y)
+		self.canvas.move(self.front_beings[u_name], d_x, d_y)
+
+	def get_delta_pos(self, old_x, old_y, new_x, new_y):
+		return old_x - new_x, old_y - new_y
 
 
 # ---------------------------------------------------------

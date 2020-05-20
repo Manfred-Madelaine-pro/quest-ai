@@ -1,3 +1,4 @@
+import random
 
 try:
 	import entity
@@ -30,8 +31,10 @@ class Model:
 
 	def init_life(self):
 		self.generate_cells()
-		self.init_beings()
+		self.generate_beings()
 
+
+# --------------------------------------------------------------------------
 
 	def generate_cells(self):
 		for x in range(WIDTH):
@@ -39,14 +42,28 @@ class Model:
 				self.cells[(x, y)].generate()
 
 
-	def init_beings(self):
-		# TODO
+	def generate_beings(self):
+		self.beings = {}
 		self.dead_names = []
-		self.beings = {i: entity.Being(i, i, 0) for i in range(WIDTH)}
 
+		for i in range(3):
+			x, y = self.get_random_pos()
+			self.beings[i] = entity.Being(i, i, 0)
+
+
+	def get_random_pos(self):
+		x = random.randint(0, WIDTH)
+		y = random.randint(0, LENGTH)
+		return x, y
+
+# --------------------------------------------------------------------------
 
 	def start(self):
 		self.is_complete = False
+
+	def stop(self):
+		print("End Simulation.")
+		self.is_complete = True
 
 	def update(self):
 		self.remove_beings()
@@ -55,10 +72,8 @@ class Model:
 		self.update_beings()
 		# self.update_cells() TODO
 
-	def stop(self):
-		print("End Simulation.")
-		self.is_complete = True
 
+# --------------------------------------------------------------------------
 
 	def update_beings(self):
 		for being in self.beings.values():
@@ -79,6 +94,8 @@ class Model:
 			
 			print(f"{dead.u_name} ({dead.x}, {dead.y}) died at the age of {dead.age}!")
 
+
+# --------------------------------------------------------------------------
 
 	def update_cells(self):
 		# TODO
