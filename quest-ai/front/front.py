@@ -97,7 +97,7 @@ class Front(screen.GenericScreen):
 		self.canvas.move(self.front_beings[u_name], d_x, d_y)
 
 	def get_delta_pos(self, old_x, old_y, new_x, new_y):
-		return old_x - new_x, old_y - new_y
+		return new_x - old_x, new_y - old_y
 
 
 # ---------------------------------------------------------

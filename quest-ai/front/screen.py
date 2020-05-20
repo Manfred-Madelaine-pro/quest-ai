@@ -3,7 +3,7 @@ from tkinter import *
 
 WINDOW_SIZE = 600
 
-REFRESH_DELAY = 100
+REFRESH_DELAY = 200
 
 
 class GenericScreen:

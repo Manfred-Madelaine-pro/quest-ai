@@ -48,7 +48,7 @@ class Model:
 
 		for i in range(3):
 			x, y = self.get_random_pos()
-			self.beings[i] = entity.Being(i, i, 0)
+			self.beings[i] = entity.Being(i, x, y)
 
 
 	def get_random_pos(self):

@@ -8,7 +8,7 @@ WATER_LABEL = 'water'
 PLANT_LABEL = 'plant'
 
 SPEED = 1
-MAX_MOVE = 2
+MAX_MOVE = 1
 
 
 class Entity:
@@ -68,7 +68,7 @@ class Being (Entity):
 
 
 	def update(self):
-		# self.move_random()
+		self.move_random()
 		# self.move_fix()
 		self.age += 1
 
