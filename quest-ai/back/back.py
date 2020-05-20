@@ -6,6 +6,10 @@ except ImportError:
 	from back import entity
 
 
+
+ENTITY_NUMBER = 3
+
+
 class Model:
 
 	def __init__(self, width, length):
@@ -46,15 +50,22 @@ class Model:
 		self.beings = {}
 		self.dead_names = []
 
-		for i in range(3):
-			x, y = self.get_random_pos()
+		for i in range(ENTITY_NUMBER):
+			x, y = self.get_random_gauss_pos()
 			self.beings[i] = entity.Being(i, x, y)
 
 
 	def get_random_pos(self):
-		x = random.randint(0, WIDTH)
-		y = random.randint(0, LENGTH)
+		x = random.gauss(0, WIDTH)
+		y = random.gauss(0, LENGTH)
 		return x, y
+
+
+	def get_random_gauss_pos(self):
+		x = random.gauss(-2, 5)
+		y = random.gauss(-2, 5)
+		return x, y
+
 
 # --------------------------------------------------------------------------
 
@@ -83,7 +94,7 @@ class Model:
 				self.save_dead_being(being)
 
 	def out_of_bound(self, being):
-		return being.x/3 > WIDTH or being.y/3 > LENGTH
+		return being.x > WIDTH or being.y > LENGTH
 
 	def save_dead_being(self, being):
 		self.dead_names += [being.u_name]

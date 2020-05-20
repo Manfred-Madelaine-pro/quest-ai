@@ -68,7 +68,7 @@ class Being (Entity):
 
 
 	def update(self):
-		self.move_random()
+		# self.move_random()
 		# self.move_fix()
 		self.age += 1
 

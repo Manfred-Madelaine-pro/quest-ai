@@ -10,6 +10,8 @@ except ImportError:
 	from front import colors
 
 
+PAD_X = 0
+PAD_Y = 0
 MARGIN = 2
 
 
@@ -84,7 +86,7 @@ class Front(screen.GenericScreen):
 		self.front_beings[being.u_name] = being_id
 	
 	def get_front_pos(self, x, y):
-		return x*self.being_step, y*self.being_step
+		return x*self.being_step + PAD_X, y*self.being_step + PAD_Y
 	
 	def get_being_color(self):
 		return colors.random_color_in_list([colors.RED, colors.YELLOW])

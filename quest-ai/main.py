@@ -1,7 +1,7 @@
 from front.front import *
 
 
-WIDTH = 20
+WIDTH = 5
 LENGTH = WIDTH
 
 
