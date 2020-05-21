@@ -1,9 +1,9 @@
 import random
 
 
-VERBOSE = True
+VERBOSE = False
 
-MAX_WATER = 3
+MAX_WATER = 10
 MAX_PLANT = 10
 
 WATER_LABEL = 'water'
@@ -59,9 +59,10 @@ class Cell (Entity):
 			self.label = PLANT_LABEL
 
 
-	def get_water(self):
-		self.water -= 1
-		return 1
+	def get_water(self, sip):
+		s = min(sip, self.water)
+		self.water -= s
+		return s
 
 
 # ---------------------------------------------------------
@@ -72,6 +73,7 @@ class Being (Entity):
 
 		# TODO get random unique name
 		self.age = 0
+		self.sip = 1
 		self.alive = True
 		self.world = world
 		self.u_name = u_name
@@ -86,14 +88,16 @@ class Being (Entity):
 		self.check_water_lvl()
 
 	def action(self):
+		action_point = 1
 		if random.random() > 0.5:
 			self.random_move()
 		elif random.random() > 0.5:
 			self.drink()
+			action_point = 0
 		else:
 			verbose_print(f"{self} stayed iddling.")
 
-		self.water -= 1
+		self.water -= action_point
 
 	# -----
 
@@ -130,8 +134,10 @@ class Being (Entity):
 	def drink(self):
 		cell = self.world.cells[(self.x, self.y)]
 		if cell.water >= 1:
-			verbose_print(f"{self}(+1) drinked in {cell}(-1)")
-			self.water += cell.get_water()
+			old_cell = str(cell)
+			sip = cell.get_water(self.sip)
+			verbose_print(f"{self}(+{sip}) drinked in {old_cell}(-{sip})")
+			self.water += sip
 		else:
 			verbose_print(f"{self} tryed to drink but {cell} is completely dry ! [FAILED]")
 

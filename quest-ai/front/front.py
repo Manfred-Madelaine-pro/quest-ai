@@ -83,11 +83,13 @@ class Front(screen.GenericScreen):
 		)
 		self.front_beings[being.u_name] = being_id
 	
-	def get_front_pos(self, x, y):
-		return x*self.being_step, y*self.being_step
-	
 	def get_being_color(self):
 		return colors.random_color_in_list([colors.RED, colors.YELLOW])
+	
+	# ----
+	
+	def get_front_pos(self, x, y):
+		return x*self.being_step, y*self.being_step
 
 	def change_pos(self, u_name, new_x, new_y):
 		old_x, old_y, old_x2, old_y2 = self.canvas.coords(self.front_beings[u_name])

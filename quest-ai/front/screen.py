@@ -3,7 +3,7 @@ from tkinter import *
 
 WINDOW_SIZE = 600
 
-REFRESH_DELAY = 200
+REFRESH_DELAY = 600
 
 
 class GenericScreen:
@@ -68,7 +68,7 @@ class GenericScreen:
 	def update_creation_bind(self, key):
 		self.init_univers()
 	def start_bind(self, key):
-		self.play_creation()
+		self.update_creation()
 	def stop_bind(self, key):
 		self.stop_creation()
 	def quit(self, key):

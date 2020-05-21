@@ -6,6 +6,8 @@ except ImportError:
 	from back import entity
 
 
+VERBOSE = False
+
 NB_ENTITIES = 5
 
 
@@ -21,6 +23,7 @@ class Model:
 
 
 	def init_cells(self):
+		self.turn = 0
 		self.cells = {}
 		self.is_complete = False
 
@@ -63,15 +66,17 @@ class Model:
 		self.is_complete = False
 
 	def stop(self):
-		print("End Simulation.")
+		verbose_print("End Simulation.")
 		self.is_complete = True
 
 	def update(self):
+		verbose_print(f'---- turn : {self.turn} ----')
 		self.remove_beings()
 		self.dead_names = []
 
 		self.update_beings()
 		# self.update_cells() TODO
+		self.turn += 1
 
 
 # --------------------------------------------------------------------------
@@ -83,6 +88,9 @@ class Model:
 			if not being.alive:
 				self.register_dead_being(being)
 
+		if len(self.beings) == 0:
+			self.stop()
+
 
 	def register_dead_being(self, being):
 		self.dead_names += [being.u_name]
@@ -91,8 +99,6 @@ class Model:
 		for name in self.dead_names:
 			dead = self.beings.pop(name)
 			
-			# print(f"{dead.u_name} ({dead.x}, {dead.y}) died at the age of {dead.age}!")
-
 
 # --------------------------------------------------------------------------
 
@@ -108,12 +114,15 @@ class Model:
 
 # --------------------------------------------------------------------------
 
+
+verbose_print = print if VERBOSE else lambda *a, **k: None
+
+
 if __name__ == '__main__':
 	width = 5
 	length = width
 	model = Model(width, length)
 
 	for i in range(5):
-		print(f'---- turn : {i} ----')
 		model.update()
 
