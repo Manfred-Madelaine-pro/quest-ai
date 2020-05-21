@@ -6,14 +6,15 @@ except ImportError:
 	from back import entity
 
 
+NB_ENTITIES = 5
+
+
 class Model:
 
 	def __init__(self, width, length):
-		global WIDTH
-		global LENGTH
 
-		WIDTH = width
-		LENGTH = length
+		self.width = width
+		self.length = length
 
 		self.init_cells()
 		self.init_life()
@@ -23,8 +24,8 @@ class Model:
 		self.cells = {}
 		self.is_complete = False
 
-		for x in range(WIDTH):
-			for y in range(LENGTH):
+		for x in range(self.width):
+			for y in range(self.length):
 				c = entity.Cell(x, y)
 				self.cells[(x, y)] = c
 
@@ -37,8 +38,8 @@ class Model:
 # --------------------------------------------------------------------------
 
 	def generate_cells(self):
-		for x in range(WIDTH):
-			for y in range(LENGTH):
+		for x in range(self.width):
+			for y in range(self.length):
 				self.cells[(x, y)].generate()
 
 
@@ -46,14 +47,14 @@ class Model:
 		self.beings = {}
 		self.dead_names = []
 
-		for i in range(3):
+		for i in range(NB_ENTITIES):
 			x, y = self.get_random_pos()
-			self.beings[i] = entity.Being(i, x, y)
+			self.beings[i] = entity.Being(i, x, y, self)
 
 
 	def get_random_pos(self):
-		x = random.randint(0, WIDTH)
-		y = random.randint(0, LENGTH)
+		x = random.randint(0, self.width-1)
+		y = random.randint(0, self.length-1)
 		return x, y
 
 # --------------------------------------------------------------------------
@@ -79,20 +80,18 @@ class Model:
 		for being in self.beings.values():
 			being.update()
 
-			if self.out_of_bound(being):
-				self.save_dead_being(being)
+			if not being.alive:
+				self.register_dead_being(being)
 
-	def out_of_bound(self, being):
-		return being.x/3 > WIDTH or being.y/3 > LENGTH
 
-	def save_dead_being(self, being):
+	def register_dead_being(self, being):
 		self.dead_names += [being.u_name]
 
 	def remove_beings(self):
 		for name in self.dead_names:
 			dead = self.beings.pop(name)
 			
-			print(f"{dead.u_name} ({dead.x}, {dead.y}) died at the age of {dead.age}!")
+			# print(f"{dead.u_name} ({dead.x}, {dead.y}) died at the age of {dead.age}!")
 
 
 # --------------------------------------------------------------------------
@@ -102,6 +101,19 @@ class Model:
 		# update water (specific pattern)
 		# update food
 
-		for x in range(WIDTH):
-			for y in range(LENGTH):
+		for x in range(self.width):
+			for y in range(self.length):
 				self.cells[(x, y)].update()
+
+
+# --------------------------------------------------------------------------
+
+if __name__ == '__main__':
+	width = 5
+	length = width
+	model = Model(width, length)
+
+	for i in range(5):
+		print(f'---- turn : {i} ----')
+		model.update()
+
