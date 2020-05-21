@@ -1,0 +1,19 @@
+
+#  global_config
+
+global_config:
+  nom: Madelaine
+  prenom: Manfred
+  freres:
+    - Morgan
+    - Ruben
+  test:
+    - obj:
+      - o
+      - b
+      - j
+
+    - trucs:
+      - he
+      - ha
+      - hi
