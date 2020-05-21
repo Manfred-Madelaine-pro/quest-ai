@@ -8,15 +8,14 @@ except ImportError:
 
 VERBOSE = False
 
-NB_ENTITIES = 5
-
 
 class Model:
 
-	def __init__(self, width, length):
+	def __init__(self, width, length, conf={}):
 
 		self.width = width
 		self.length = length
+		self.nb_entities = conf['nb_entities']
 
 		self.init_cells()
 		self.init_life()
@@ -50,7 +49,7 @@ class Model:
 		self.beings = {}
 		self.dead_names = []
 
-		for i in range(NB_ENTITIES):
+		for i in range(self.nb_entities):
 			x, y = self.get_random_pos()
 			self.beings[i] = entity.Being(i, x, y, self)
 
@@ -103,10 +102,6 @@ class Model:
 # --------------------------------------------------------------------------
 
 	def update_cells(self):
-		# TODO
-		# update water (specific pattern)
-		# update food
-
 		for x in range(self.width):
 			for y in range(self.length):
 				self.cells[(x, y)].update()

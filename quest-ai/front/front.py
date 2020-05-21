@@ -10,15 +10,15 @@ except ImportError:
 	from front import colors
 
 
-MARGIN = 2
-
-
 class Front(screen.GenericScreen):
 
-	def __init__(self, width, length):
-		super().__init__(width, length)
+	def __init__(self, back_model, width, length, conf={}):
+		self.margin = conf['margin']
+		screen_conf = conf['screen'].values()
+		super().__init__(width, length, *screen_conf)
 
 		self.f.title('Quest AI')
+		self.back_model = back_model
 
 		self.being_size = self.cell_size
 		self.being_step = self.being_size
@@ -36,10 +36,10 @@ class Front(screen.GenericScreen):
 		self.front_cells = {}
 		for i in range(self.width):
 			for j in range(self.length):
-				x0 = i*self.cell_size + MARGIN
-				y0 = j*self.cell_size + MARGIN
-				x1 = self.cell_size*self.width - MARGIN
-				y1 = self.cell_size*self.width - MARGIN
+				x0 = i*self.cell_size + self.margin
+				y0 = j*self.cell_size + self.margin
+				x1 = self.cell_size*self.width - self.margin
+				y1 = self.cell_size*self.width - self.margin
 				rect_id = self.canvas.create_rectangle(x0, y0, x1, y1, fill='white')
 
 				self.canvas.itemconfig(rect_id, tags=(str(i+1), str(j+1)))
@@ -49,7 +49,7 @@ class Front(screen.GenericScreen):
 # ------------------------- Overrided Methods --------------------------------
 	
 	def init_world(self):
-		self.back_model = back.Model(self.width, self.length)
+		self.back_model.init_life()
 
 	def update(self):
 		self.back_model.update()
@@ -129,7 +129,9 @@ class Front(screen.GenericScreen):
 if __name__ == '__main__':
 	width = 9
 	length = width
-	front = Front(width, length)
+
+	back_model = back.Model(width, length)
+	front = Front(width, length, back_model)
 
 
 	

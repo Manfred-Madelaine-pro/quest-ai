@@ -62,7 +62,7 @@ if __name__ == '__main__':
     hsl = (20, 80, 20)
 
     color = get_hsl_to_hex(*hsl)
-    color = get_color_with_random_lightness(BLUE)
+    color = get_color_with_random_lightness(hsl)
     print(color)
 
     hsl = (10, 20, 20)
