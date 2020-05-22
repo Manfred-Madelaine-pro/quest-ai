@@ -6,10 +6,6 @@ VERBOSE = False
 MAX_WATER = 10
 MAX_PLANT = 10
 
-WATER_LABEL = 'water'
-PLANT_LABEL = 'plant'
-
-
 UP = (0,-1)
 DOWN = (0,1)
 LEFT = (-1,0)
@@ -54,9 +50,9 @@ class Cell (Entity):
 
 	def update_label(self):
 		if self.water > self.plant:
-			self.label = WATER_LABEL
+			self.label = 'water'
 		elif self.water < self.plant:
-			self.label = PLANT_LABEL
+			self.label = 'plant'
 
 
 	def get_water(self, sip):

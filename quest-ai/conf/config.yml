@@ -1,0 +1,17 @@
+
+#  global_config
+---
+
+main:
+  width: &id_1 20
+  length: *id_1
+
+front:
+  margin: 2
+  screen: 
+    window_size: 600
+    refresh_delay: 100
+
+back:
+  verbose: true
+  nb_entities: 5

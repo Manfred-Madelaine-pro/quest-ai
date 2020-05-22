@@ -1,19 +1,16 @@
 from tkinter import *
 
 
-WINDOW_SIZE = 600
-
-REFRESH_DELAY = 600
-
 
 class GenericScreen:
 
-	def __init__(self, width, length):
+	def __init__(self, width, length, window_size=600, refresh_delay=100):
 		self.f = Tk()
 		
 		self.width = width
 		self.length = length
-		self.cell_size = WINDOW_SIZE/self.width
+		self.refresh_delay = refresh_delay
+		self.cell_size = window_size/self.width
 
 		self.canvas = Canvas(
 						self.f, 
@@ -38,7 +35,7 @@ class GenericScreen:
 		self.update_creation()
 	def update_creation(self):
 		self.back_model.start()
-		self.f.after(REFRESH_DELAY, self.update_screen)
+		self.f.after(self.refresh_delay, self.update_screen)
 	def stop_creation(self):
 		self.back_model.stop()
 
@@ -48,7 +45,7 @@ class GenericScreen:
 
 		# callback
 		if not self.back_model.is_complete:
-			self.f.after(REFRESH_DELAY, self.update_screen)
+			self.f.after(self.refresh_delay, self.update_screen)
 
 
 	def init_world(self):
