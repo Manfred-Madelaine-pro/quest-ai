@@ -1,6 +1,9 @@
 import random
 
 
+VERBOSE = False
+
+
 class Matrix:
 	def __init__(self, nb_row, nb_col, name="Matrix"):
 		self.name = name
@@ -49,11 +52,39 @@ class Matrix:
 	def activate(self):
 		pass
 
-	def mutate(self):
-		pass
+	def mutate(self, mutation_rate):
+		for r in range(self.nb_row):
+			for c in range(self.nb_col):
+				successful_mutation = random.random() <= mutation_rate
+				if successful_mutation:
+					mutation = random.gauss(0, 0.2)
+					verbose_print(f"{self.name} mutate ({(r,c)}): {mutation} !")
+					self.matrix[(r,c)] += mutation
+					self.normalize(r, c)
 
-	def crossover(self):
-		pass
+	def normalize(self, r, c):
+		if self.matrix[(r,c)] > 1:
+			self.matrix[(r,c)] = 1
+		if self.matrix[(r,c)] < -1:
+			self.matrix[(r,c)] = -1
+
+
+	def crossover(self, partner):
+		child = Matrix(self.nb_row, self.nb_col)
+
+		rand_r = random.randint(0, self.nb_row-1)
+		rand_c = random.randint(0, self.nb_col-1)
+
+		verbose_print(f"crossover limit : {(rand_r,rand_c)}")
+		for r in range(self.nb_row):
+			for c in range(self.nb_col):
+				if r <= rand_r and c <= rand_c:
+					child.matrix[(r,c)] = self.matrix[(r,c)]
+				else:
+					child.matrix[(r,c)] = partner.matrix[(r,c)]
+
+		return child
+
 
 	def clone(self):
 		pass
@@ -74,11 +105,25 @@ def array_to_single_col_matrix(array):
 	return m
 
 
+# --------------------------------------------------------------------------
+
+
+verbose_print = print if VERBOSE else lambda *a, **k: None
+
+
 if __name__ == '__main__':
+	print("\n----- mutation -----")
 	m = Matrix(2, 5)
 	print(m)
-	print(f"to_array : {m.to_array()}")
-
-	array = [i for i in range(5)]
-	m = array_to_single_col_matrix(array)
+	m.mutate(0.5)
+	m.name = "Mutated"
 	print(m)
+
+	print("\n----- crossover -----")
+	father = Matrix(2, 5, 'Father')
+	print(father)
+	mother = Matrix(2, 5, 'Mother')
+	print(mother)
+	child = father.crossover(mother)
+	child.name = 'Child'
+	print(child)

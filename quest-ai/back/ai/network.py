@@ -23,7 +23,6 @@ class Network:
 			# ...
 			# weight_matrix = (output, hidden)
 
-
 	def __str__(self):
 		net = ''
 		for w in self.weights:
@@ -34,6 +33,19 @@ class Network:
 
 # -------------------------------------------------
 
+	def mutate(self, mutation_rate):
+		for w in self.weights:
+			w.mutate(mutation_rate)
+
+	def crossover(self, partner):
+		child = Network(self.input_nodes, self.hidden_nodes, self.output_nodes, self.hidden_layers)
+		for i, w in enumerate(self.weights):
+			child[i] = w.crossover(partner.weights[i])
+		return child
+
+
+# -------------------- Display -----------------------------
+
 def print_network(nn, vertical=False):
 	network = create_network(nn)
 	if vertical:
@@ -43,9 +55,10 @@ def print_network(nn, vertical=False):
 
 def create_network(nn):
 	network = []
+	layer_template = "[{}]"
 	# Input nodes | mat_hw_1 | Hidden nodes 1 | mat_hw_i | Hidden nodes i | mat_hw_n | Output nodes 
 	input_nodes = matrix.array_to_single_col_matrix([0 for x in range(nn.input_nodes)])
-	input_nodes.name = "Input"
+	input_nodes.name = layer_template.format("Input")
 	network += [input_nodes]
 
 	for i in range(nn.hidden_layers+1):
@@ -56,7 +69,11 @@ def create_network(nn):
 		array = [0 for x in range(nb_nodes)]
 		
 		hidden_nodes_i = matrix.array_to_single_col_matrix(array)
-		hidden_nodes_i.name = f"H. Layer {i+1}" if (i < nn.hidden_layers) else "Output"
+		if (i < nn.hidden_layers):
+			hidden_nodes_i.name = layer_template.format(f"Hidden {i+1}")
+		else:
+			hidden_nodes_i.name = layer_template.format("Output")
+
 		network += [hidden_nodes_i]
 	
 	return network

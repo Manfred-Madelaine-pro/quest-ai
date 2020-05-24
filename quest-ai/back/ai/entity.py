@@ -31,6 +31,7 @@ class Entity:
 
 	def mutate(self):
 		print(f"{self} mutate !")
+		self.brain.mutate()
 
 	def calculate_fitness(self):
 		print(f"{self} fitness = {round(self.score, 4)}")

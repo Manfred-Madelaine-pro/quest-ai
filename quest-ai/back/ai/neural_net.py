@@ -1,4 +1,3 @@
-'''
 
 ----- Population ----
 	best score
@@ -24,8 +23,6 @@
 
 		keep track of best score to print
 		gen +=1 
-
-
 
 	mutate
 
@@ -137,6 +134,7 @@
 		create all possible action on matrice
 
 	dot (product ?)
+	
 	randomize
 
 	toArray
@@ -162,6 +160,3 @@
 ----- ? ----
 
 
-
-
-'''

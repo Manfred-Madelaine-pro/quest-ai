@@ -46,12 +46,8 @@ class Population:
 	def natural_selection(self):
 		print("\nNatural Selection")
 		self.best_entity = self.get_best_entity()
-		new_gen = []
+		new_gen = [self.best_entity]
 
-		# save best in new gen
-		new_gen += [self.best_entity]
-
-		# complete remaining slots with mutated ent
 		for i in range(1, self.size):
 			# crossocer with another parent ?
 			child = self.get_a_parent().crossover(self.get_a_parent())
