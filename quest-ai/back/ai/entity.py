@@ -17,34 +17,40 @@ class Entity:
 	def __str__(self):
 		return f"{self.name}"
 
+# -------------------------------------------------
+
 	def turn(self):
 		print(f"{self} play turn !")
-		
 		self.year += 1
-		self.score += self.year*random.random()
-
 		self.check_life()
 
 	def check_life(self):
 		if self.year > 2 :
 			self.alive = False
 
-	def mutate(self):
-		print(f"{self} mutate !")
-		self.brain.mutate()
+# -------------------------------------------------
 
-	def calculate_fitness(self):
-		print(f"{self} fitness = {round(self.score, 4)}")
+	def mutate(self, mutation_rate):
+		print(f"{self} mutate !")
+		self.brain.mutate(mutation_rate)
+
+	def crossover(self, parent):
+		e = Entity(self.layer)
+		e.brain = self.brain.crossover(parent.brain)
+		return e
 
 	def clone(self):
 		e = Entity(self.layer)
 		e.brain = self.brain.clone()
 		return e
 
-	def crossover(self, parent):
-		e = Entity(self.layer)
-		e.brain = self.brain.crossover(parent)
-		return e
+# -------------------------------------------------
+
+	def calculate_fitness(self):
+		self.score += self.year*random.random()
+		print(f"{self} fitness = {round(self.score, 4)}")
+
+# -------------------------------------------------
 
 
 if __name__ == '__main__':

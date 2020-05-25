@@ -9,19 +9,7 @@ class Network:
 		
 		self.output_nodes = output_nodes
 
-		self.weights = []
-		for i in range(self.hidden_layers+1):
-			name = 'Input' if (i == 0) else 'Hidden'
-			if (i == self.hidden_layers):
-				name = 'Output' 
-
-			row = self.output_nodes if (i == self.hidden_layers) else self.hidden_nodes
-			col = self.input_nodes if (i == 0) else self.hidden_nodes
-			self.weights += [matrix.Matrix(row, col, name + " Weights")]
-			# weight_matrix = (hidden, input)
-			# weight_matrix = (hidden, hidden)
-			# ...
-			# weight_matrix = (output, hidden)
+		self.create_weights()
 
 	def __str__(self):
 		net = ''
@@ -30,6 +18,27 @@ class Network:
 
 		return net
 
+# -------------------------------------------------
+
+	def create_weights(self):
+		self.weights = []
+		for i in range(self.hidden_layers+1):
+			layer_name = self.get_layer_name(i)
+
+			row = self.output_nodes if (i == self.hidden_layers) else self.hidden_nodes
+			col = self.input_nodes if (i == 0) else self.hidden_nodes
+			
+			# weights = [(hidden, input), (hidden, hidden), ..., (output, hidden)]
+			self.weights += [matrix.Matrix(row, col, layer_name + " Weights")]
+
+	def get_layer_name(self, layer_id):
+		name = 'Input' if (layer_id == 0) else 'Hidden'
+		return name if (layer_id != self.hidden_layers) else 'Output' 
+
+# -------------------------------------------------
+
+	def output(self):
+		pass
 
 # -------------------------------------------------
 
@@ -40,18 +49,20 @@ class Network:
 	def crossover(self, partner):
 		child = Network(self.input_nodes, self.hidden_nodes, self.output_nodes, self.hidden_layers)
 		for i, w in enumerate(self.weights):
-			child[i] = w.crossover(partner.weights[i])
+			child.weights[i] = w.crossover(partner.weights[i])
 		return child
 
+	def clone(self):
+		clone = Network(self.input_nodes, self.hidden_nodes, self.output_nodes, self.hidden_layers)
+		for i, w in enumerate(self.weights):
+			clone.weights[i] = w.clone()
+		return clone
 
 # -------------------- Display -----------------------------
 
-def print_network(nn, vertical=False):
+def print_network(nn):
 	network = create_network(nn)
-	if vertical:
-		vertical_print(network)
-	else:
-		herizontal_print(network)
+	horizontal_print(network)
 
 def create_network(nn):
 	network = []
@@ -78,11 +89,7 @@ def create_network(nn):
 	
 	return network
 	
-def vertical_print(network):
-	for layer in network:
-		print(layer)
-
-def herizontal_print(network):
+def horizontal_print(network):
 	merged = []
 	for layer in network:
 		if len(merged) == 0:
@@ -117,15 +124,25 @@ def herizontal_print(network):
 			matr += '{:^14}'.format(c)
 	print(matr)
 
-
 # -------------------------------------------------
 
+
 if __name__ == '__main__':
-	input = 4
-	hidden = 2
-	output = 3
-	layers = 2
+	input, output = 4, 3
+	hidden, layers = 2, 2	
 
 	nn = Network(input, hidden, output, layers)
-
 	print_network(nn)
+
+	tab = '\t'*6
+	print(f"{tab}----- mutation -----\n")
+	nn.mutate(0.5)
+	print_network(nn)
+
+	print(f"{tab}----- crossover -----\n")
+	mother = Network(input, hidden, output, layers)
+	print_network(mother)
+
+	child = nn.crossover(mother)
+	print_network(child)
+

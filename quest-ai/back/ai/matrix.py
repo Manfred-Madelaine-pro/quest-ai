@@ -11,6 +11,8 @@ class Matrix:
 		self.nb_col = nb_col
 		self.randomize()
 
+# -------------------------------------------------
+
 	def __str__(self):
 		title = f"\t{self.name} ({self.nb_row}, {self.nb_col})"
 
@@ -31,6 +33,7 @@ class Matrix:
 			lines_str[r] += [line]
 		return lines_str
 
+# -------------------------------------------------
 
 	def randomize(self):
 		self.matrix = {}
@@ -38,19 +41,26 @@ class Matrix:
 			for c in range(self.nb_col):
 				self.matrix[(r,c)] = random.uniform(-1, 1)
 
+	def normalize(self, r, c):
+		if self.matrix[(r,c)] > 1:
+			self.matrix[(r,c)] = 1
+		if self.matrix[(r,c)] < -1:
+			self.matrix[(r,c)] = -1
+
+# -------------------------------------------------
 
 	def dot_product(self):
 		pass
 
-	def output(self):
-		pass
+# -------------------------------------------------
 
 	def add_bias(self):
 		pass
 
-
 	def activate(self):
 		pass
+
+# -------------------------------------------------
 
 	def mutate(self, mutation_rate):
 		for r in range(self.nb_row):
@@ -61,13 +71,6 @@ class Matrix:
 					verbose_print(f"{self.name} mutate ({(r,c)}): {mutation} !")
 					self.matrix[(r,c)] += mutation
 					self.normalize(r, c)
-
-	def normalize(self, r, c):
-		if self.matrix[(r,c)] > 1:
-			self.matrix[(r,c)] = 1
-		if self.matrix[(r,c)] < -1:
-			self.matrix[(r,c)] = -1
-
 
 	def crossover(self, partner):
 		child = Matrix(self.nb_row, self.nb_col)
@@ -85,9 +88,15 @@ class Matrix:
 
 		return child
 
-
 	def clone(self):
-		pass
+		clone = Matrix(self.nb_row, self.nb_col)
+
+		for r in range(self.nb_row):
+			for c in range(self.nb_col):
+				clone.matrix[(r,c)] = self.matrix[(r,c)]
+		return clone
+
+# -------------------------------------------------
 
 	def to_array(self):
 		array = []
@@ -97,6 +106,7 @@ class Matrix:
 
 		return array
 
+# --------------------------------------------------------------------------
 
 def array_to_single_col_matrix(array):
 	m = Matrix(len(array), 1)
@@ -104,11 +114,9 @@ def array_to_single_col_matrix(array):
 		m.matrix[(i,0)] = val
 	return m
 
+verbose_print = print if VERBOSE else lambda *a, **k: None
 
 # --------------------------------------------------------------------------
-
-
-verbose_print = print if VERBOSE else lambda *a, **k: None
 
 
 if __name__ == '__main__':
