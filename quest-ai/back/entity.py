@@ -41,12 +41,10 @@ class Cell (Entity):
 		self.label = ''
 		self.plant = 0
 
-
 	def generate(self):
 		self.water = random.randint(0, MAX_WATER)
 		self.plant = random.randint(0, MAX_PLANT)
 		self.update_label()
-
 
 	def update_label(self):
 		if self.water > self.plant:
@@ -54,12 +52,10 @@ class Cell (Entity):
 		elif self.water < self.plant:
 			self.label = 'plant'
 
-
 	def get_water(self, sip):
 		s = min(sip, self.water)
 		self.water -= s
 		return s
-
 
 # ---------------------------------------------------------
 

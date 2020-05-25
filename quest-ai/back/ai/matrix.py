@@ -1,5 +1,6 @@
 import random
 
+import numpy as np
 
 VERBOSE = False
 
@@ -49,16 +50,41 @@ class Matrix:
 
 # -------------------------------------------------
 
-	def dot_product(self):
-		pass
+	def dot_product(self, mat):
+		result = Matrix(self.nb_row, mat.nb_col)
+		
+		if mat.nb_row != self.nb_col:
+			print(f"Dot product is imossible : B.row ({mat.nb_row}) != A.col({self.nb_col})")
+			return result
+
+		for i in range(self.nb_row):
+			for j in range(mat.nb_col):
+				sum = 0
+				for k in range(self.nb_col):
+					sum += self.matrix[(i,k)]*mat.matrix[(k,j)]
+
+				result.matrix[(i,j)] = sum
+
+		return result
 
 # -------------------------------------------------
 
 	def add_bias(self):
-		pass
+		bias = Matrix(self.nb_row, 1)
+		
+		for r in range(self.nb_row):
+			bias.matrix[(r,0)] = self.matrix[(r,0)]
+		
+		# bias.matrix[(self.nb_row, 0)] = 1
+		return bias
 
-	def activate(self):
-		pass
+	def activate(self, mode='relu'):
+		activated = Matrix(self.nb_row, self.nb_col)
+
+		for r in range(self.nb_row):
+			for c in range(self.nb_col):
+				activated.matrix[(r,c)] = activation_mode(self.matrix[(r,c)], mode)
+		return activated
 
 # -------------------------------------------------
 
@@ -108,6 +134,18 @@ class Matrix:
 
 # --------------------------------------------------------------------------
 
+def activation_mode(val, mode):
+	if mode == 'relu':
+		return relu(val)
+	if mode == 'sigmoid':
+		return sigmoid(val)
+
+def relu(x):
+	return max(0, x)
+
+def sigmoid(x):
+    return 1/(1 + np.exp(-x))
+
 def array_to_single_col_matrix(array):
 	m = Matrix(len(array), 1)
 	for i, val in enumerate(array):
@@ -135,3 +173,21 @@ if __name__ == '__main__':
 	child = father.crossover(mother)
 	child.name = 'Child'
 	print(child)
+
+	print("\n----- bias -----")
+	bias = child.add_bias()
+	bias.name = "Bias"
+	print(bias)
+
+	print("\n----- dot product -----")
+	a = Matrix(2, 3)
+	a.name = "A"
+	print(a)
+	b = Matrix(3, 1)
+	b.name = "B"
+	print(b)
+
+	res = a.dot_product(b)
+	res.name = "Result"
+	print(res)
+	

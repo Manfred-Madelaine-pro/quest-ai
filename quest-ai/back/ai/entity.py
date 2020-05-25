@@ -30,6 +30,13 @@ class Entity:
 
 # -------------------------------------------------
 
+	def action(self):
+		vision_array = []
+		# predict best action ?
+		self.brain.predict(vision_array)
+
+# -------------------------------------------------
+
 	def mutate(self, mutation_rate):
 		print(f"{self} mutate !")
 		self.brain.mutate(mutation_rate)

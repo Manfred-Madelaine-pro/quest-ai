@@ -37,8 +37,21 @@ class Network:
 
 # -------------------------------------------------
 
-	def output(self):
-		pass
+	def predict(self, input_array):
+		input_matrix = matrix.array_to_single_col_matrix(input_array)
+		input_matrix.name = "Input Array"
+		print(input_matrix)
+		bias = input_matrix.add_bias()
+
+		for i in range(self.hidden_layers):
+			hidden_input = self.weights[i].dot_product(bias).activate()
+			bias = hidden_input.add_bias()
+
+		output = self.weights[-1].dot_product(bias)
+		output = output.activate(mode='sigmoid')
+		output.name = "Output Array"
+		print(output)
+		return output.to_array()
 
 # -------------------------------------------------
 
@@ -126,8 +139,7 @@ def horizontal_print(network):
 
 # -------------------------------------------------
 
-
-if __name__ == '__main__':
+def mutate_and_crossover():
 	input, output = 4, 3
 	hidden, layers = 2, 2	
 
@@ -146,3 +158,15 @@ if __name__ == '__main__':
 	child = nn.crossover(mother)
 	print_network(child)
 
+
+if __name__ == '__main__':
+	input, output = 4, 3
+	hidden, layers = 2, 2	
+
+	nn = Network(input, hidden, output, layers)
+	print_network(nn)
+
+	tab = '\t'*6
+	print(f"{tab}----- output -----\n")
+	input_array = [i for i in range(4)]
+	nn.predict(input_array)
