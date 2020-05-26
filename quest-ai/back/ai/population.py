@@ -1,10 +1,12 @@
 import random
 
-import entity
+import ai
 
 
 class Population:
 	def __init__(self, size):
+		self.world = None
+		
 		self.gen = 0
 		self.size = size
 		self.mutation_rate = 0.2
@@ -22,7 +24,7 @@ class Population:
 		self.best_score_history = []
 
 		for i in range(self.size):
-			self.entities += [entity.Entity()]
+			self.entities += [ai.AI(self.world)]
 
 	def have_living_beings(self):
 		for e in self.entities:
@@ -90,7 +92,8 @@ class Population:
 
 
 if __name__ == '__main__':
-	p = Population(2)
+	size = 2
+	p = Population(size)
 
 	turn = 0
 	while p.have_living_beings():

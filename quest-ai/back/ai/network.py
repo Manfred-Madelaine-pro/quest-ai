@@ -37,7 +37,7 @@ class Network:
 
 # -------------------------------------------------
 
-	def predict(self, input_array):
+	def analyse(self, input_array):
 		input_matrix = matrix.array_to_single_col_matrix(input_array)
 		input_matrix.name = "Input Array"
 		print(input_matrix)
@@ -169,4 +169,4 @@ if __name__ == '__main__':
 	tab = '\t'*6
 	print(f"{tab}----- output -----\n")
 	input_array = [i for i in range(4)]
-	nn.predict(input_array)
+	nn.analyse(input_array)
