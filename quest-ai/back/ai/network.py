@@ -1,4 +1,9 @@
-import matrix
+
+try:
+	import matrix
+except ImportError:
+	from ai import matrix 
+
 
 class Network:
 	def __init__(self, input_nodes, hidden_nodes, output_nodes, hidden_layers):

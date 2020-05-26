@@ -1,6 +1,9 @@
 import random
 
-import network
+try:
+	import network
+except ImportError:
+	from ai import network 
 
 class AI:
 	def __init__(self, world, captors=4, neurones=4, choices=5, layer=2):

@@ -1,6 +1,6 @@
 import random
 
-import ai
+from ai import ai
 
 
 class Population:
