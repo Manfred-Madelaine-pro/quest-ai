@@ -12,14 +12,12 @@ VERBOSE = False
 class Model:
 
 	def __init__(self, width, length, conf={}):
-
 		self.width = width
 		self.length = length
 		self.nb_entities = conf['nb_entities']
 
 		self.init_cells()
 		self.init_life()
-
 
 	def init_cells(self):
 		self.turn = 0
@@ -31,11 +29,9 @@ class Model:
 				c = entity.Cell(x, y)
 				self.cells[(x, y)] = c
 
-
 	def init_life(self):
 		self.generate_cells()
 		self.generate_beings()
-
 
 # --------------------------------------------------------------------------
 
@@ -44,7 +40,6 @@ class Model:
 			for y in range(self.length):
 				self.cells[(x, y)].generate()
 
-
 	def generate_beings(self):
 		self.beings = {}
 		self.dead_names = []
@@ -52,7 +47,6 @@ class Model:
 		for i in range(self.nb_entities):
 			x, y = self.get_random_pos()
 			self.beings[i] = entity.Being(i, x, y, self)
-
 
 	def get_random_pos(self):
 		x = random.randint(0, self.width-1)
@@ -77,7 +71,6 @@ class Model:
 		# self.update_cells() TODO
 		self.turn += 1
 
-
 # --------------------------------------------------------------------------
 
 	def update_beings(self):
@@ -90,14 +83,12 @@ class Model:
 		if len(self.beings) == 0:
 			self.stop()
 
-
 	def register_dead_being(self, being):
 		self.dead_names += [being.u_name]
 
 	def remove_beings(self):
 		for name in self.dead_names:
 			dead = self.beings.pop(name)
-			
 
 # --------------------------------------------------------------------------
 
@@ -105,7 +96,6 @@ class Model:
 		for x in range(self.width):
 			for y in range(self.length):
 				self.cells[(x, y)].update()
-
 
 # --------------------------------------------------------------------------
 

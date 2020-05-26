@@ -1,6 +1,6 @@
 import random
 
-from ai import ai
+from ai import generic_ai
 
 
 class Population:
@@ -24,7 +24,7 @@ class Population:
 		self.best_score_history = []
 
 		for i in range(self.size):
-			self.entities += [ai.AI(self.world)]
+			self.entities += [generic_ai.Generic_AI(self.world)]
 
 	def have_living_beings(self):
 		for e in self.entities:
