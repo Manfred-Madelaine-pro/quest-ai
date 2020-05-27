@@ -1,30 +1,30 @@
 import random
 
-from ai import generic_ai
+import name
+from ai.ai import *
 
 
 class Population:
-	def __init__(self, size):
-		self.world = None
+	def __init__(self, world, size, mutation_rate=0.2):
+		self.world = world
 		
 		self.gen = 0
 		self.size = size
-		self.mutation_rate = 0.2
+		self.mutation_rate = mutation_rate
 
-		self.create_entities()
+		self.create_first_settlers()
 
 	def __str__(self):
 		return '\n'.join([str(e) for e in self.entities])
 
 # -------------------------------------------------
 
-	def create_entities(self):
-		self.entities = []
+	def create_first_settlers(self):
 		self.best_entity = None
 		self.best_score_history = []
-
-		for i in range(self.size):
-			self.entities += [generic_ai.Generic_AI(self.world)]
+		n = name.Names()
+		settlers = [AI(self.world, name=n.baptise()) for i in range(self.size)]
+		self.create_generation(settlers)
 
 	def have_living_beings(self):
 		for e in self.entities:
@@ -32,12 +32,20 @@ class Population:
 				return True
 		return False
 
+	def create_generation(self, new_gen):
+		self.turn = 0
+		self.entities = new_gen
+
 # -------------------------------------------------
 
 	def update(self):
+		print(f"-- turn {self.turn} --")
+
 		# shuffle list ??
 		for e in self.entities:
 			e.turn()
+
+		self.turn += 1
 
 	# not used...
 	def mutate(self):
@@ -62,7 +70,7 @@ class Population:
 			new_gen += [child]
 
 		self.best_score_history += [self.best_entity.score]
-		self.entities = new_gen
+		self.create_generation(new_gen)
 		self.gen += 1
 	
 	def get_best_entity(self):
@@ -90,20 +98,27 @@ class Population:
 
 # -------------------------------------------------
 
-
-if __name__ == '__main__':
+def test():
 	size = 2
 	p = Population(size)
 
-	turn = 0
 	while p.have_living_beings():
-		print(f"-- turn {turn} --")
 		p.update()
-		turn += 1
 
 	print("\n\t/!\\ Population extinction /!\\\n")
 	p.trigger_fitness_calculation()
 	p.natural_selection()
-
 	# best score
+
+def test2():
+	size = 2
+	world = None
+	p = Population(world, size)
+
+	p.update()
+
+
+if __name__ == '__main__':
+	test2()
+
 
