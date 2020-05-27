@@ -1,8 +1,11 @@
 
 try:
 	import matrix
+	VERBOSE = True
 except ImportError:
 	from ai import matrix 
+	VERBOSE = False
+
 
 
 class Network:
@@ -45,7 +48,7 @@ class Network:
 	def analyse(self, input_array):
 		input_matrix = matrix.array_to_single_col_matrix(input_array)
 		input_matrix.name = "Input Array"
-		print(input_matrix)
+		verbose_print(input_matrix)
 		bias = input_matrix.add_bias()
 
 		for i in range(self.hidden_layers):
@@ -55,7 +58,7 @@ class Network:
 		output = self.weights[-1].dot_product(bias)
 		output = output.activate(mode='sigmoid')
 		output.name = "Output Array"
-		print(output)
+		verbose_print(output)
 		return output.to_array()
 
 # -------------------------------------------------
@@ -140,7 +143,7 @@ def horizontal_print(network):
 		matr += '\n' if _ > 0 else ''
 		for c in r:
 			matr += '{:^14}'.format(c)
-	print(matr)
+	verbose_print(matr)
 
 # -------------------------------------------------
 
@@ -152,17 +155,21 @@ def mutate_and_crossover():
 	print_network(nn)
 
 	tab = '\t'*6
-	print(f"{tab}----- mutation -----\n")
+	verbose_print(f"{tab}----- mutation -----\n")
 	nn.mutate(0.5)
 	print_network(nn)
 
-	print(f"{tab}----- crossover -----\n")
+	verbose_print(f"{tab}----- crossover -----\n")
 	mother = Network(input, hidden, output, layers)
 	print_network(mother)
 
 	child = nn.crossover(mother)
 	print_network(child)
 
+
+verbose_print = print if VERBOSE else lambda *a, **k: None
+
+# -------------------------------------------------
 
 if __name__ == '__main__':
 	input, output = 4, 3
@@ -172,6 +179,6 @@ if __name__ == '__main__':
 	print_network(nn)
 
 	tab = '\t'*6
-	print(f"{tab}----- output -----\n")
+	verbose_print(f"{tab}----- output -----\n")
 	input_array = [i for i in range(4)]
 	nn.analyse(input_array)
