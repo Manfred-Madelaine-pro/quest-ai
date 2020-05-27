@@ -1,10 +1,13 @@
 import random
 
 
-VERBOSE = False
+VERBOSE = __name__ != '__main__'
+
 
 MAX_WATER = 10
 MAX_PLANT = 10
+
+BEING_INITIAL_WATER = 3
 
 UP = (0,-1)
 DOWN = (0,1)
@@ -13,7 +16,7 @@ RIGHT = (0,1)
 
 VERTICAL = [UP, DOWN]
 HORIZONTAL = [LEFT, RIGHT]
-DIRECTIONS = VERTICAL + HORIZONTAL
+DIRECTIONS = dict(enumerate(VERTICAL + HORIZONTAL))
 
 
 class Entity:
@@ -34,19 +37,20 @@ class Entity:
 # ---------------------------------------------------------
 
 class Cell (Entity):
-	def __init__(self, x, y):
+	def __init__(self, x, y, max_water=MAX_WATER, max_plant=MAX_PLANT):
 		super().__init__(x, y)
 
 		self.u_name = 'cell'
 		self.label = ''
 		self.plant = 0
 
+		self.max_water = max_water
+		self.max_plant = max_plant
 
 	def generate(self):
-		self.water = random.randint(0, MAX_WATER)
-		self.plant = random.randint(0, MAX_PLANT)
+		self.water = random.randint(0, self.max_water)
+		self.plant = random.randint(0, self.max_plant)
 		self.update_label()
-
 
 	def update_label(self):
 		if self.water > self.plant:
@@ -54,34 +58,31 @@ class Cell (Entity):
 		elif self.water < self.plant:
 			self.label = 'plant'
 
-
 	def get_water(self, sip):
 		s = min(sip, self.water)
 		self.water -= s
 		return s
 
-
 # ---------------------------------------------------------
 
 class Being (Entity):
 	def __init__(self, u_name, x, y, world):
-		super().__init__(x, y, water=MAX_WATER)
+		super().__init__(x, y, water=BEING_INITIAL_WATER)
 
 		# TODO get random unique name
-		self.age = 0
+		self.year = 0
 		self.sip = 1
 		self.alive = True
 		self.world = world
 		self.u_name = u_name
 
-	# -----
+# -------------------------------------------------
 
 	def update(self):
 		self.action()
-		self.age += 1
-
-		self.check_borders()
-		self.check_water_lvl()
+		self.year += 1
+		
+		self.heath_check()
 
 	def action(self):
 		action_point = 1
@@ -95,21 +96,25 @@ class Being (Entity):
 
 		self.water -= action_point
 
-	# -----
+# -------------------------------------------------
+
+	def heath_check(self):
+		self.check_borders()
+		self.check_water_lvl()
 
 	def check_borders(self):
 		if (self.x < 0 or self.x >= self.world.width) or (self.y < 0 or self.y >= self.world.length):
 			self.is_dead('fell off the world')
 
 	def check_water_lvl(self):
-		if self.water <= 0:
+		if self.water <= 0 and self.alive:
 			self.is_dead('died of thirst')
 
 	def is_dead(self, reason='is dead'):
 		self.alive = False
-		verbose_print(f"\t{self.u_name} {reason} at the age of {self.age}.")
+		verbose_print(f"\t{self.u_name} {reason} at the age of {self.year}.")
 
-	# -----
+# -------------------------------------------------
 
 	def random_move(self, diagonal=False):
 		if diagonal:
@@ -119,13 +124,18 @@ class Being (Entity):
 			self.random_step(random.getrandbits(1))
 
 	def random_step(self, horizontal=True):
-		dir = random.choice(HORIZONTAL) if horizontal else random.choice(VERTICAL)
-				
-		verbose_print(f"{self} moved by {dir}!")
-		self.x += dir[0]
-		self.y += dir[1]
+		direction = random.choice(HORIZONTAL) if horizontal else random.choice(VERTICAL)
+		self.step(direction)
 
-	# -----
+	def pick_direction(self, key):
+		return DIRECTIONS.get(key)
+
+	def step(self, direction):
+		verbose_print(f"{self} moved by {direction}!")
+		self.x += direction[0]
+		self.y += direction[1]
+
+# -------------------------------------------------
 
 	def drink(self):
 		cell = self.world.cells[(self.x, self.y)]

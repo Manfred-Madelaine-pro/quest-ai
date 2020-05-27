@@ -1,0 +1,70 @@
+try:
+	import generic_ai
+except ImportError:
+	from ai import generic_ai 
+	from back import entity 
+
+
+class AI(generic_ai.GenericAI, entity.Being):
+	def __init__(self, world, x=0, y=0, name=None, captors=4, neurones=4, choices=5, layer=2):
+		generic_ai.GenericAI.__init__(self, captors, neurones, choices, layer)
+		
+		if name: self.name = name
+		entity.Being.__init__(self, self.name, x, y, world)
+		
+	def __str__(self):
+		return entity.Being.__str__(self)
+
+# -------------------------------------------------
+
+	def check_life(self):
+		self.heath_check()
+
+# -------------------------------------------------
+
+	def action(self):
+		near_data = self.gather_data()
+		analysis = self.analyse(near_data)
+		thoughts = self.think(analysis)
+		choice = self.choose(thoughts)
+		
+		self.move(choice) if choice < 4 else self.idle()
+		self.water -= 1
+
+	def act(self, choice):
+		switch_case = {
+        	0 : self.up,
+        	1 : self.down,
+        	2 : self.left,
+        	3 : self.right,
+        	4 : self.idle,
+        	5 : self.drink,
+        }
+		switch_case.get(choice, self.idle)()
+
+	# def gather_data(self):
+	# 	pass
+
+# -------------------------------------------------
+
+	def move(self, direction_id):
+		direction = self.pick_direction(direction_id)
+		self.step(direction)
+
+	def idle(self):
+		print(f"{self} stayed idle !")
+
+	def drink(self):
+		print(f"{self} drank !")
+
+# -------------------------------------------------
+	
+	def crossover(self, parent, ai_name):
+		ai = AI(self.world, name=ai_name)
+		ai.brain = self.brain.crossover(parent.brain)
+		return ai
+
+	def clone(self, name):
+		clone = AI(self.world, name=name)
+		clone.brain = self.brain.clone()
+		return clone
