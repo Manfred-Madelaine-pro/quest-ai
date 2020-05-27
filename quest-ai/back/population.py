@@ -68,17 +68,12 @@ class Population:
 	def natural_selection(self):
 		print("\nNatural Selection")
 		self.best_entity = self.get_best_entity()
-		new_gen = [self.best_entity.clone()]
+		new_gen = [self.clone(self.best_entity)]
 
 		for i in range(1, self.size):
 			father = self.get_a_parent()
 			mother = self.get_a_parent()
-
-			child = father.crossover(mother)
-			child.name = name.new_born(mother.name, father.name)
-			child.mutate(self.mutation_rate)
-
-			new_gen += [child]
+			new_gen += [self.crossover(mother, father)]
 
 		self.best_score_history += [self.best_entity.score]
 		self.entities = new_gen
@@ -107,6 +102,20 @@ class Population:
 		return self.best_entity
 
 # -------------------------------------------------
+	
+	def crossover(self, mother, father):
+		child_name = name.new_born(mother.name, father.name)
+		child = father.crossover(mother, child_name)
+		child.mutate(self.mutation_rate)
+		return child
+
+	def clone(self, entity):
+		clone_name = name.new_born(entity.name, 'Jr.')
+		clone = entity.clone(clone_name)
+		return clone
+
+
+# -------------------------------------------------
 
 def test():
 	class World:
@@ -114,11 +123,12 @@ def test():
 			self.width = 2
 			self.length = 2
 
-	size = 2
+	size = 10
 	world = World()
 	p = Population(world, size)
-	p.run_generation()
 
+	while p.gen < 20:
+		p.run_generation()
 
 if __name__ == '__main__':
 	test()

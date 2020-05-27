@@ -35,13 +35,19 @@ class Names:
 		return self.names.pop()
 
 
-def new_born(mother_name, father_name):
-	n = father_name.split()
+def new_born(mother_name, father_name=None):
+	n = mother_name.split()
+	n = list(filter(lambda a: a != 'Jr.', n))
+
+	post = father_name if father_name == 'Jr.' else ''
+
 	try:
-		count = roman_to_int(n.pop(-1)) + 1
-		return ' '.join(n + [int_to_Roman(count)])
+		count = roman_to_int(n[-1]) + 1
+		n.pop(-1)
+		post = [post, int_to_Roman(count)] if post else [int_to_Roman(count)]
+		return ' '.join(n + post)
 	except Exception as e:
-		return f"{father_name} {int_to_Roman(1)}"
+		return f"{' '.join(n + [post])} {int_to_Roman(1)}"
 
 
 def int_to_Roman(num):
@@ -80,9 +86,14 @@ def roman_to_int(s):
 
 if __name__ == '__main__':
 	n = Names()
-	print(n.baptise())
+	nm = n.baptise()
+	print(nm)
 
-	nb = new_born(n.baptise(), n.baptise())
+	nb = new_born(nm, 'Jr.')
 	print(nb)
-	nb = new_born(n.baptise(), nb)
+	nb = new_born(nm, n.baptise())
+	print(nb)
+	nb = new_born(nb, n.baptise())
+	print(nb)
+	nb = new_born(nb, 'Jr.')
 	print(nb)

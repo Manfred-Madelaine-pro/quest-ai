@@ -71,14 +71,13 @@ class Being (Entity):
 		self.world = world
 		self.u_name = u_name
 
-	# -----
+# -------------------------------------------------
 
 	def update(self):
 		self.action()
 		self.year += 1
 		
 		self.heath_check()
-
 
 	def action(self):
 		action_point = 1
@@ -92,12 +91,11 @@ class Being (Entity):
 
 		self.water -= action_point
 
-	# -----
+# -------------------------------------------------
 
 	def heath_check(self):
 		self.check_borders()
 		self.check_water_lvl()
-
 
 	def check_borders(self):
 		if (self.x < 0 or self.x >= self.world.width) or (self.y < 0 or self.y >= self.world.length):
@@ -111,7 +109,7 @@ class Being (Entity):
 		self.alive = False
 		verbose_print(f"\t{self.u_name} {reason} at the age of {self.year}.")
 
-	# -----
+# -------------------------------------------------
 
 	def random_move(self, diagonal=False):
 		if diagonal:
@@ -132,7 +130,7 @@ class Being (Entity):
 		self.x += direction[0]
 		self.y += direction[1]
 
-	# -----
+# -------------------------------------------------
 
 	def drink(self):
 		cell = self.world.cells[(self.x, self.y)]

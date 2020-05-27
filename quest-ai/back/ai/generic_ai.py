@@ -134,7 +134,7 @@ class Generic_AI:
 # -------------------------------------------------
 
 	def calculate_fitness(self):
-		self.score += self.year*0.2
+		self.score += self.year*1
 		print(f"{self} fitness = {round(self.score, 4)}")
 
 # -------------------------------------------------

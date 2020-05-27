@@ -55,7 +55,7 @@ class Matrix:
 		result = Matrix(self.nb_row, mat.nb_col)
 		
 		if mat.nb_row != self.nb_col:
-			print(f"Dot product is imossible : B.row ({mat.nb_row}) != A.col({self.nb_col})")
+			print(f"Dot product is impossible : {mat.name}.row ({mat.nb_row}) != {self.name}.col({self.nb_col})")
 			return result
 
 		for i in range(self.nb_row):

@@ -43,3 +43,12 @@ class AI(generic_ai.Generic_AI, entity.Being):
 
 # -------------------------------------------------
 	
+	def crossover(self, parent, ai_name):
+		ai = AI(self.world, ai_name)
+		ai.brain = self.brain.crossover(parent.brain)
+		return ai
+
+	def clone(self, name):
+		clone = AI(self.world, name)
+		clone.brain = self.brain.clone()
+		return clone
