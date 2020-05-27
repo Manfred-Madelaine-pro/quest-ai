@@ -26,7 +26,8 @@ class Generic_AI:
 # -------------------------------------------------
 
 	def turn(self):
-		print(f"{self} play turn !")
+		if not self.alive:
+			return 
 		self.action()
 
 		self.year += 1
@@ -87,7 +88,7 @@ class Generic_AI:
 	def choose(self, choices):
 		# handle indecision
 		if len(choices) > 1:
-			print(f"{self} is facing a dilemma !")
+			print(f"{self.name} is facing a dilemma !")
 			return random.choice(choices)
 		return choices[0]
 
@@ -95,11 +96,11 @@ class Generic_AI:
 
 	def act(self, choice):
 		switch_case = {
-          0 : self.idle,
-          1 : self.up,
-          2 : self.down,
-          3 : self.left,
-          4 : self.right
+        	0 : self.up,
+        	1 : self.down,
+        	2 : self.left,
+        	3 : self.right,
+        	4 : self.idle
         }
 		switch_case.get(choice, self.idle)()
 
@@ -133,7 +134,7 @@ class Generic_AI:
 # -------------------------------------------------
 
 	def calculate_fitness(self):
-		self.score += self.year*random.random()
+		self.score += self.year*0.2
 		print(f"{self} fitness = {round(self.score, 4)}")
 
 # -------------------------------------------------
