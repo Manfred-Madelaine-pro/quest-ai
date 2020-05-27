@@ -1,7 +1,8 @@
 import random
 
 
-VERBOSE = False
+VERBOSE = __name__ != '__main__'
+
 
 MAX_WATER = 10
 MAX_PLANT = 10
@@ -13,7 +14,7 @@ RIGHT = (0,1)
 
 VERTICAL = [UP, DOWN]
 HORIZONTAL = [LEFT, RIGHT]
-DIRECTIONS = VERTICAL + HORIZONTAL
+DIRECTIONS = dict(enumerate(VERTICAL + HORIZONTAL))
 
 
 class Entity:
@@ -64,7 +65,7 @@ class Being (Entity):
 		super().__init__(x, y, water=MAX_WATER)
 
 		# TODO get random unique name
-		self.age = 0
+		self.year = 0
 		self.sip = 1
 		self.alive = True
 		self.world = world
@@ -74,10 +75,10 @@ class Being (Entity):
 
 	def update(self):
 		self.action()
-		self.age += 1
+		self.year += 1
+		
+		self.heath_check()
 
-		self.check_borders()
-		self.check_water_lvl()
 
 	def action(self):
 		action_point = 1
@@ -93,6 +94,11 @@ class Being (Entity):
 
 	# -----
 
+	def heath_check(self):
+		self.check_borders()
+		self.check_water_lvl()
+
+
 	def check_borders(self):
 		if (self.x < 0 or self.x >= self.world.width) or (self.y < 0 or self.y >= self.world.length):
 			self.is_dead('fell off the world')
@@ -103,7 +109,7 @@ class Being (Entity):
 
 	def is_dead(self, reason='is dead'):
 		self.alive = False
-		verbose_print(f"\t{self.u_name} {reason} at the age of {self.age}.")
+		verbose_print(f"\t{self.u_name} {reason} at the age of {self.year}.")
 
 	# -----
 
@@ -115,11 +121,16 @@ class Being (Entity):
 			self.random_step(random.getrandbits(1))
 
 	def random_step(self, horizontal=True):
-		dir = random.choice(HORIZONTAL) if horizontal else random.choice(VERTICAL)
-				
-		verbose_print(f"{self} moved by {dir}!")
-		self.x += dir[0]
-		self.y += dir[1]
+		direction = random.choice(HORIZONTAL) if horizontal else random.choice(VERTICAL)
+		self.step(direction)
+
+	def pick_direction(self, key):
+		return DIRECTIONS.get(key)
+
+	def step(self, direction):				
+		verbose_print(f"{self} moved by {direction}!")
+		self.x += direction[0]
+		self.y += direction[1]
 
 	# -----
 
