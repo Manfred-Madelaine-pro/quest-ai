@@ -8,7 +8,7 @@ except ImportError:
 
 
 class Generic_AI:
-	def __init__(self, world, captors=4, neurones=4, choices=5, layer=2):
+	def __init__(self, captors=4, neurones=4, choices=5, layer=2):
 		self.score = 0
 		
 		self.year = 0
@@ -19,8 +19,6 @@ class Generic_AI:
 		self.layer = layer
 		self.captors = captors
 		self.brain = network.Network(captors, neurones, choices, self.layer)
-
-		self.world = world
 
 	def __str__(self):
 		return f"{self.name}"
