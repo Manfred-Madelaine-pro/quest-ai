@@ -125,7 +125,7 @@ class Being (Entity):
 	def pick_direction(self, key):
 		return DIRECTIONS.get(key)
 
-	def step(self, direction):				
+	def step(self, direction):
 		verbose_print(f"{self} moved by {direction}!")
 		self.x += direction[0]
 		self.y += direction[1]

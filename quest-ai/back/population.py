@@ -23,7 +23,9 @@ class Population:
 		self.best_entity = None
 		self.best_score_history = []
 		name_handler = name.Names()
-		settlers = [AI(self.world, name=name_handler.baptise()) for _ in range(self.size)]
+		settlers = []
+		for _ in range(self.size):
+			settlers += [AI(self.world, name=name_handler.baptise())]
 		self.entities = settlers
 
 	def healthy_generation(self):
@@ -116,20 +118,21 @@ class Population:
 # -------------------------------------------------
 
 def test():
-	class World:
-		def __init__(self):
-			self.width = 2
-			self.length = 2
+	from back import GenericGrid 
+	
+	size = 2
+	gen_max = 2
 
-	size = 5
-	gen_max = 20
-	world = World()
+	width = 3
+	world = GenericGrid(width, width)
+	world.generate_cells()
+
 	p = Population(world, size)
 
 	while p.gen < gen_max:
+		print(world, "Gen: ", p.gen)
 		p.run_generation()
 		p.natural_selection()
-	p.run_generation()
 
 
 if __name__ == '__main__':

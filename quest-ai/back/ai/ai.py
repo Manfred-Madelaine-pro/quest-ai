@@ -17,6 +17,11 @@ class AI(generic_ai.GenericAI, entity.Being):
 
 # -------------------------------------------------
 
+	def check_life(self):
+		self.heath_check()
+
+# -------------------------------------------------
+
 	def action(self):
 		near_data = self.gather_data()
 		analysis = self.analyse(near_data)

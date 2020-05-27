@@ -9,36 +9,57 @@ except ImportError:
 VERBOSE = False
 
 
-class Model:
-
-	def __init__(self, width, length, conf={}):
+class GenericGrid:
+	def __init__(self, width, length):
 		self.width = width
 		self.length = length
-		self.nb_entities = conf['nb_entities']
-
 		self.init_cells()
-		self.init_life()
+
+	def __str__(self):
+		title = f"\tGrid ({self.width}, {self.length})"
+		grid = ''
+		for x in range(self.width):
+			if len(grid) > 0 : grid += '\n'
+			for y in range(self.length):
+				grid += '{:5}'.format(self.cells[(x, y)].water)
+
+		return grid + title
 
 	def init_cells(self):
-		self.turn = 0
 		self.cells = {}
-		self.is_complete = False
-
 		for x in range(self.width):
 			for y in range(self.length):
 				c = entity.Cell(x, y)
 				self.cells[(x, y)] = c
+
+	def generate_cells(self):
+		for x in range(self.width):
+			for y in range(self.length):
+				self.cells[(x, y)].generate()
+
+	def update_cells(self):
+		for x in range(self.width):
+			for y in range(self.length):
+				self.cells[(x, y)].update()
+
+# --------------------------------------------------------------------------
+
+class Model(GenericGrid):
+	def __init__(self, width, length, conf={}):
+		super().__init__(width, length)
+		self.nb_entities = conf['nb_entities'] if conf else 2
+		self.init_life()
+
+	def init_cells(self):
+		self.turn = 0
+		self.is_complete = False
+		super().init_cells()
 
 	def init_life(self):
 		self.generate_cells()
 		self.generate_beings()
 
 # --------------------------------------------------------------------------
-
-	def generate_cells(self):
-		for x in range(self.width):
-			for y in range(self.length):
-				self.cells[(x, y)].generate()
 
 	def generate_beings(self):
 		self.beings = {}
@@ -92,22 +113,27 @@ class Model:
 
 # --------------------------------------------------------------------------
 
-	def update_cells(self):
-		for x in range(self.width):
-			for y in range(self.length):
-				self.cells[(x, y)].update()
-
-# --------------------------------------------------------------------------
-
 
 verbose_print = print if VERBOSE else lambda *a, **k: None
 
+def test_Grid():
+	width = 2
+	grid = GenericGrid(width, width)
+	grid.generate_cells()
+	print(grid)
 
-if __name__ == '__main__':
+def test_Model():
 	width = 5
 	length = width
 	model = Model(width, length)
+	print(model)
 
 	for i in range(5):
 		model.update()
+		print(model)
+
+
+if __name__ == '__main__':
+	test_Grid()
+	test_Model()
 
