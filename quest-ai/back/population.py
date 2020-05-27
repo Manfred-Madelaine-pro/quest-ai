@@ -24,27 +24,33 @@ class Population:
 		self.best_score_history = []
 		n = name.Names()
 		settlers = [AI(self.world, name=n.baptise()) for i in range(self.size)]
-		self.create_generation(settlers)
+		self.entities = settlers
 
-	def have_living_beings(self):
+	def healthy_generation(self):
 		for e in self.entities:
 			if e.alive:
 				return True
 		return False
 
-	def create_generation(self, new_gen):
+# -------------------------------------------------
+
+	def run_generation(self):
 		self.turn = 0
-		self.entities = new_gen
+		while self.healthy_generation():
+			self.update()
+
+		print("\n\t/!\\ Population extinction /!\\\n")
+		self.trigger_fitness_calculation()
+		self.gen += 1
+		self.natural_selection()
+		# best score
 
 # -------------------------------------------------
 
 	def update(self):
 		print(f"-- turn {self.turn} --")
-
 		# shuffle list ??
-		for e in self.entities:
-			e.turn()
-
+		for e in self.entities: e.turn()
 		self.turn += 1
 
 	# not used...
@@ -65,13 +71,17 @@ class Population:
 		new_gen = [self.best_entity.clone()]
 
 		for i in range(1, self.size):
-			child = self.get_a_parent().crossover(self.get_a_parent())
+			father = self.get_a_parent()
+			mother = self.get_a_parent()
+
+			child = father.crossover(mother)
+			child.name = name.new_born(mother.name, father.name)
 			child.mutate(self.mutation_rate)
+
 			new_gen += [child]
 
 		self.best_score_history += [self.best_entity.score]
-		self.create_generation(new_gen)
-		self.gen += 1
+		self.entities = new_gen
 	
 	def get_best_entity(self):
 		max = 0
@@ -89,8 +99,8 @@ class Population:
 		minimum_score -= minimum_score*random.random()
 		print(f"minimum_score for breed : {minimum_score}")
 		for e in self.entities:
-			print(f"suitor score = {e.score}")
 			if e.score > minimum_score:
+				print(f"suitor score = {e.score}")
 				return e
 
 		print("return best as default !!!!!!!")
@@ -99,26 +109,18 @@ class Population:
 # -------------------------------------------------
 
 def test():
+	class World:
+		def __init__(self):
+			self.width = 2
+			self.length = 2
+
 	size = 2
-	p = Population(size)
-
-	while p.have_living_beings():
-		p.update()
-
-	print("\n\t/!\\ Population extinction /!\\\n")
-	p.trigger_fitness_calculation()
-	p.natural_selection()
-	# best score
-
-def test2():
-	size = 2
-	world = None
+	world = World()
 	p = Population(world, size)
-
-	p.update()
+	p.run_generation()
 
 
 if __name__ == '__main__':
-	test2()
+	test()
 
 
