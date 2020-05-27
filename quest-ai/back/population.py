@@ -22,8 +22,8 @@ class Population:
 	def create_first_settlers(self):
 		self.best_entity = None
 		self.best_score_history = []
-		n = name.Names()
-		settlers = [AI(self.world, name=n.baptise()) for i in range(self.size)]
+		name_handler = name.Names()
+		settlers = [AI(self.world, name=name_handler.baptise()) for _ in range(self.size)]
 		self.entities = settlers
 
 	def healthy_generation(self):
@@ -39,10 +39,9 @@ class Population:
 		while self.healthy_generation():
 			self.update()
 
-		print("\n\t/!\\ Population extinction /!\\\n")
+		print("\n\t/!\\ Generation extinction /!\\\n")
 		self.trigger_fitness_calculation()
 		self.gen += 1
-		self.natural_selection()
 		# best score
 
 # -------------------------------------------------
@@ -71,8 +70,8 @@ class Population:
 		new_gen = [self.clone(self.best_entity)]
 
 		for i in range(1, self.size):
-			father = self.get_a_parent()
 			mother = self.get_a_parent()
+			father = self.get_a_parent()
 			new_gen += [self.crossover(mother, father)]
 
 		self.best_score_history += [self.best_entity.score]
@@ -92,10 +91,9 @@ class Population:
 		# 		best / with fitness > (rand?) threshold / randomly ?
 		minimum_score = self.best_entity.score 
 		minimum_score -= minimum_score*random.random()
-		print(f"minimum_score for breed : {minimum_score}")
 		for e in self.entities:
 			if e.score > minimum_score:
-				print(f"suitor score = {e.score}")
+				print(f"suitor {e.name} : score = {e.score}")
 				return e
 
 		print("return best as default !!!!!!!")
@@ -104,13 +102,13 @@ class Population:
 # -------------------------------------------------
 	
 	def crossover(self, mother, father):
-		child_name = name.new_born(mother.name, father.name)
-		child = father.crossover(mother, child_name)
+		child_name = mother.name.crossover(father.name)
+		child = mother.crossover(father, child_name)
 		child.mutate(self.mutation_rate)
 		return child
 
 	def clone(self, entity):
-		clone_name = name.new_born(entity.name, 'Jr.')
+		clone_name = entity.name.clone()
 		clone = entity.clone(clone_name)
 		return clone
 
@@ -123,12 +121,16 @@ def test():
 			self.width = 2
 			self.length = 2
 
-	size = 10
+	size = 5
+	gen_max = 20
 	world = World()
 	p = Population(world, size)
 
-	while p.gen < 20:
+	while p.gen < gen_max:
 		p.run_generation()
+		p.natural_selection()
+	p.run_generation()
+
 
 if __name__ == '__main__':
 	test()

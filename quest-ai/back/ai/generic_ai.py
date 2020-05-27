@@ -88,7 +88,7 @@ class GenericAI:
 	def choose(self, choices):
 		# handle indecision
 		if len(choices) > 1:
-			print(f"{self.name} is facing a dilemma !")
+			print(f"\t{self.name} is facing a dilemma !")
 			return random.choice(choices)
 		return choices[0]
 
