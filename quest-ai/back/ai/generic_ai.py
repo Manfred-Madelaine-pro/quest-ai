@@ -7,7 +7,7 @@ except ImportError:
 	from back import entity
 
 
-class Generic_AI:
+class GenericAI:
 	def __init__(self, captors=4, neurones=4, choices=5, layer=2):
 		self.score = 0
 		
@@ -59,7 +59,7 @@ class Generic_AI:
 
 	def think(self, thoughts):
 		''' 
-			Generic_AI's thoughts become its options, they then become potential choices
+			GenericAI's thoughts become its options, they then become potential choices
 			to eventually turn into actions.
 		'''
 		best, options = self.best_options(thoughts)
@@ -122,12 +122,12 @@ class Generic_AI:
 		self.brain.mutate(mutation_rate)
 
 	def crossover(self, parent):
-		ai = Generic_AI(self.layer)
+		ai = GenericAI(self.layer)
 		ai.brain = self.brain.crossover(parent.brain)
 		return ai
 
 	def clone(self):
-		ai = Generic_AI(self.layer)
+		ai = GenericAI(self.layer)
 		ai.brain = self.brain.clone()
 		return ai
 
@@ -145,7 +145,7 @@ if __name__ == '__main__':
 	neurones = 10
 	choices = 5
 	layer = 2
-	ai = Generic_AI(captors, neurones, choices, layer)
+	ai = GenericAI(captors, neurones, choices, layer)
 	print(ai)
 
 	ai.action()

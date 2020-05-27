@@ -5,9 +5,9 @@ except ImportError:
 	from back import entity 
 
 
-class AI(generic_ai.Generic_AI, entity.Being):
+class AI(generic_ai.GenericAI, entity.Being):
 	def __init__(self, world, name=None, captors=4, neurones=4, choices=5, layer=2):
-		generic_ai.Generic_AI.__init__(self, captors, neurones, choices, layer)
+		generic_ai.GenericAI.__init__(self, captors, neurones, choices, layer)
 		x, y = 0, 0
 		if name: self.name = name
 		entity.Being.__init__(self, self.name, x, y, world)
