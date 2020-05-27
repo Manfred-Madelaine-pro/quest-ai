@@ -7,6 +7,8 @@ VERBOSE = __name__ != '__main__'
 MAX_WATER = 10
 MAX_PLANT = 10
 
+BEING_INITIAL_WATER = 3
+
 UP = (0,-1)
 DOWN = (0,1)
 LEFT = (-1,0)
@@ -35,16 +37,19 @@ class Entity:
 # ---------------------------------------------------------
 
 class Cell (Entity):
-	def __init__(self, x, y):
+	def __init__(self, x, y, max_water=MAX_WATER, max_plant=MAX_PLANT):
 		super().__init__(x, y)
 
 		self.u_name = 'cell'
 		self.label = ''
 		self.plant = 0
 
+		self.max_water = max_water
+		self.max_plant = max_plant
+
 	def generate(self):
-		self.water = random.randint(0, MAX_WATER)
-		self.plant = random.randint(0, MAX_PLANT)
+		self.water = random.randint(0, self.max_water)
+		self.plant = random.randint(0, self.max_plant)
 		self.update_label()
 
 	def update_label(self):
@@ -62,7 +67,7 @@ class Cell (Entity):
 
 class Being (Entity):
 	def __init__(self, u_name, x, y, world):
-		super().__init__(x, y, water=MAX_WATER)
+		super().__init__(x, y, water=BEING_INITIAL_WATER)
 
 		# TODO get random unique name
 		self.year = 0
@@ -102,7 +107,7 @@ class Being (Entity):
 			self.is_dead('fell off the world')
 
 	def check_water_lvl(self):
-		if self.water <= 0:
+		if self.water <= 0 and self.alive:
 			self.is_dead('died of thirst')
 
 	def is_dead(self, reason='is dead'):

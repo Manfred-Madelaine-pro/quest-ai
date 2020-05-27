@@ -135,7 +135,7 @@ class GenericAI:
 
 	def calculate_fitness(self):
 		self.score += self.year*1
-		print(f"{self} fitness = {round(self.score, 4)}")
+		print(f"{self.name} : fitness = {round(self.score, 4)}")
 
 # -------------------------------------------------
 
