@@ -42,6 +42,9 @@ class GenericGrid:
 			for y in range(self.length):
 				self.cells[(x, y)].update()
 
+	def out_of_boud(self, x, y):
+		return (x < 0 or x >= self.width) or (y < 0 or y >= self.length)
+
 # --------------------------------------------------------------------------
 
 class Model(GenericGrid):

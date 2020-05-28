@@ -103,7 +103,7 @@ class Being (Entity):
 		self.check_water_lvl()
 
 	def check_borders(self):
-		if (self.x < 0 or self.x >= self.world.width) or (self.y < 0 or self.y >= self.world.length):
+		if self.world.out_of_boud(self.x, self.y):
 			self.is_dead('fell off the world')
 
 	def check_water_lvl(self):
