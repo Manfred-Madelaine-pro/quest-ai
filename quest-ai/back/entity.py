@@ -7,7 +7,7 @@ VERBOSE = __name__ != '__main__'
 MAX_WATER = 10
 MAX_PLANT = 10
 
-BEING_INITIAL_WATER = 1
+BEING_INITIAL_WATER = 2
 
 UP = (0,-1)
 DOWN = (0,1)
@@ -142,11 +142,12 @@ class Being (Entity):
 		if cell.water >= 1:
 			old_cell = str(cell)
 			sip = cell.get_water(self.sip)
-			verbose_print(f"{self}(+{sip}) drinked in {old_cell}(-{sip})")
+			verbose_print(f"{self}(+{sip}) drank in {old_cell}(-{sip})")
 			self.water += sip
-		else:
-			verbose_print(f"{self} tryed to drink but {cell} is completely dry ! [FAILED]")
+			return 0
 
+		verbose_print(f"{self} tryed to drink but {cell} is completely dry ! [FAILED]")
+		return 1
 
 
 verbose_print = print if VERBOSE else lambda *a, **k: None

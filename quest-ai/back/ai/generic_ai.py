@@ -45,7 +45,7 @@ class GenericAI:
 		analysis = self.analyse(near_data)
 		thoughts = self.think(analysis)
 		choice = self.choose(thoughts)
-		self.act(choice)
+		return self.act(choice)
 
 	def gather_data(self):
 		collected_data = [random.random() for _ in range(self.captors)]

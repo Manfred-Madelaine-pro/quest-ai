@@ -47,8 +47,8 @@ class AI(generic_ai.GenericAI, entity.Being):
 # -------------------------------------------------
 
 	def action(self):
-		generic_ai.GenericAI.action(self)
-		self.water -= 1
+		consumed = generic_ai.GenericAI.action(self)
+		self.water -= consumed
 
 	def act(self, choice):
 		possible_actions = {
@@ -60,9 +60,8 @@ class AI(generic_ai.GenericAI, entity.Being):
         	5 : self.drink,
     	}
 		if choice < 4 :
-			self.move(choice)
-		else:
-			possible_actions.get(choice, self.idle)()
+			return self.move(choice)
+		return possible_actions.get(choice, self.idle)()
 
 # -------------------------------------------------
 
@@ -86,13 +85,15 @@ class AI(generic_ai.GenericAI, entity.Being):
 	def move(self, direction_id):
 		direction = self.pick_direction(direction_id)
 		self.step(direction)
+		return 1
+
 
 	def idle(self):
 		print(f"{self} stayed idle !")
+		return 1
 
 	def drink(self):
-		print(f"{self} drank {'!'*10}")
-		entity.Being.drink(self)
+		return entity.Being.drink(self)
 
 
 # -------------------------------------------------
