@@ -119,20 +119,19 @@ class Population:
 
 def test():
 	from back import GenericGrid 
-	
-	size = 1
-	gen_max = 1
 
 	width = 3
 	world = GenericGrid(width, width)
 	world.generate_cells()
 
-	p = Population(world, size)
+	pop_size = 3
+	gen_max = 10
+	p = Population(world, pop_size)
 
 	while p.gen < gen_max:
 		print(world, "Gen: ", p.gen)
 		p.run_generation()
-		# p.natural_selection()
+		p.natural_selection()
 
 
 if __name__ == '__main__':

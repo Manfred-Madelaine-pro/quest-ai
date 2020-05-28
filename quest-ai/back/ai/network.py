@@ -48,7 +48,6 @@ class Network:
 	def analyse(self, input_array):
 		input_matrix = matrix.array_to_single_col_matrix(input_array)
 		input_matrix.name = "Input Array"
-		verbose_print(input_matrix)
 		bias = input_matrix.add_bias()
 
 		for i in range(self.hidden_layers):
@@ -58,6 +57,7 @@ class Network:
 		output = self.weights[-1].dot_product(bias)
 		output = output.activate(mode='sigmoid')
 		output.name = "Output Array"
+		verbose_print(input_matrix)
 		verbose_print(output)
 		return output.to_array()
 
