@@ -38,6 +38,10 @@ class Population:
 
 	def run_generation(self):
 		self.turn = 0
+
+		self.world.generate_cells()
+		self.entities_drop_on_world()
+
 		while self.healthy_generation():
 			self.update()
 
@@ -45,6 +49,15 @@ class Population:
 		self.trigger_fitness_calculation()
 		self.gen += 1
 		# best score
+
+	def entities_drop_on_world(self):
+		for e in self.entities:
+			e.x, e.y = self.get_random_pos()
+
+	def get_random_pos(self):
+		x = random.randint(0, self.world.width-1)
+		y = random.randint(0, self.world.length-1)
+		return x, y
 
 # -------------------------------------------------
 
@@ -120,11 +133,10 @@ class Population:
 def test():
 	from back import GenericGrid 
 
-	width = 3
+	width = 5
 	world = GenericGrid(width, width)
-	world.generate_cells()
 
-	pop_size = 3
+	pop_size = 10
 	gen_max = 10
 	p = Population(world, pop_size)
 
