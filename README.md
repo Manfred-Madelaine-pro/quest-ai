@@ -12,6 +12,9 @@ pip install pyyaml
 rules
 rain
 
+## Data Model
+![Quest AI - Data Model](img/data_model.PNG)
+
 ## AI types
 
 As for entities, we have implemented the following ones :
