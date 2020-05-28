@@ -31,3 +31,6 @@ $ py back/ai/network.py
 
 ```
 
+
+![Best score per generation](img/best_score_per_generation.PNG)
+![Quest AI gif](img/quest_ai.gif)
