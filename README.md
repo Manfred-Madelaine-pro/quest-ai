@@ -1,19 +1,29 @@
 # Quest AI
 
-Medium project where we play in a simulated and simplified world with different types of AI.
+A medium project where we play in a simulated and simplified world with different types of AI.
+
+![Quest AI gif](img/quest_ai.gif)
+
 
 ## quick start
 pip install pyyaml
 
 ## world building
 rules
+rain
 
-gif for steps
+## AI types
 
+As for entities, we have implemented the following ones :
 
-## ai types
+1. A __Random entity__ that acts regardless of his environment changes.
+1. A __Water seeker AI__ that can choose only between `wait`, `move` or `drink`.
+1. An __Herbivorous AI__ that can, not only choose between `wait`, `move` and `drink` actions, but also `eat` available food. 
+1. A __Carnivorous AI__ which have same options as __Herbivorous AI__, but can also eat other "species".
+1. A __Cannibal AI__, the most dangerous one, can devour everything near it.
 
-example :
+## Display
+An example of Neural Network viewed from the console log :
 ```
 $ py back/ai/network.py
    [Input]             Input Weights           [Hidden 1]   Hidden Weights   [Hidden 2]   Output Weights    [Output]
@@ -33,4 +43,3 @@ $ py back/ai/network.py
 
 
 ![Best score per generation](img/best_score_per_generation.PNG)
-![Quest AI gif](img/quest_ai.gif)
