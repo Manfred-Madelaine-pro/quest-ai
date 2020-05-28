@@ -10,6 +10,6 @@ if __name__ == '__main__':
 	back_conf   = global_conf['back']
 	
 	main_args = global_conf['main'].values()
-	back_model = back.Model(*main_args, back_conf)
+	back_model = back.Model(*main_args, conf=back_conf)
 
-	Front(back_model, *main_args, front_conf) 
+	Front(back_model, *main_args, conf=front_conf) 

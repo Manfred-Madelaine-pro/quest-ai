@@ -8,6 +8,10 @@ except ImportError:
 	from back import entity 
 
 
+VERBOSE = __name__ == '__main__'
+
+# TODO clean
+
 UP = (0,-1)
 DOWN = (0,1)
 LEFT = (-1,0)
@@ -89,7 +93,7 @@ class AI(generic_ai.GenericAI, entity.Being):
 
 
 	def idle(self):
-		print(f"{self} stayed idle !")
+		verbose_print(f"{self} stayed idle !")
 		return 1
 
 	def drink(self):
@@ -107,3 +111,7 @@ class AI(generic_ai.GenericAI, entity.Being):
 		clone = AI(self.world, name=name)
 		clone.brain = self.brain.clone()
 		return clone
+
+
+
+verbose_print = print if VERBOSE else lambda *a, **k: None

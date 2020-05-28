@@ -13,17 +13,18 @@ class Matrix:
 		self.nb_col = nb_col
 		self.randomize()
 
-# -------------------------------------------------
-
 	def __str__(self):
-		title = f"\t{self.name} ({self.nb_row}, {self.nb_col})"
+		title = self.get_name()
 
 		mat = ''
 		for r in range(self.nb_row):
 			mat += '\n'
 			for c in range(self.nb_col):
-				mat += '{:8}'.format(round(self.matrix[(r,c)], 3))
+				mat += f'{self.matrix[(r,c)]:8.3f}'
 		return title + mat
+
+	def get_name(self):
+		return f"\t{self.name} ({self.nb_row}, {self.nb_col})"
 
 	def get_lines_str(self):
 		lines_str = []

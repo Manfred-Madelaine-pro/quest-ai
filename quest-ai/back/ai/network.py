@@ -7,7 +7,7 @@ except ImportError:
 	from ai import display 
 
 
-VERBOSE = __name__ != '__main__'
+VERBOSE = __name__ == '__main__'
 
 
 class Network:
@@ -59,7 +59,7 @@ class Network:
 		output = self.weights[-1].dot_product(bias)
 		output = output.activate(mode='sigmoid')
 		output.name = "Output"
-		verbose_print(display.h_arrangement(input_matrix, output))
+		verbose_print(display.h_flat_arrangement(input_matrix, output))
 
 		return output.to_array()
 

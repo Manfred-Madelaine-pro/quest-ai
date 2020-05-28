@@ -4,11 +4,13 @@ import name
 from ai.ai import *
 
 
+VERBOSE = __name__ == '__main__'
+
+
 class Population:
 	def __init__(self, world, size, mutation_rate=0.2):
 		self.world = world
 		
-		self.gen = 0
 		self.size = size
 		self.mutation_rate = mutation_rate
 
@@ -20,6 +22,7 @@ class Population:
 # -------------------------------------------------
 
 	def create_first_settlers(self):
+		self.gen = 0
 		self.best_entity = None
 		self.best_score_history = []
 		name_handler = name.Names()
@@ -38,16 +41,13 @@ class Population:
 
 	def run_generation(self):
 		self.turn = 0
-
-		self.world.generate_cells()
 		self.entities_drop_on_world()
 
 		while self.healthy_generation():
 			self.update()
 
-		print("\n\t/!\\ Generation extinction /!\\\n")
+		verbose_print("\n\t/!\\ Generation extinction /!\\\n")
 		self.trigger_fitness_calculation()
-		self.gen += 1
 		# best score
 
 	def entities_drop_on_world(self):
@@ -62,9 +62,11 @@ class Population:
 # -------------------------------------------------
 
 	def update(self):
-		print(f"-- turn {self.turn} --")
+		verbose_print(f"-- turn {self.turn} --")
 		# shuffle list ??
-		for e in self.entities: e.turn()
+		for e in self.entities: 
+			e.turn()
+			verbose_print('')
 		self.turn += 1
 
 	# not used...
@@ -75,12 +77,12 @@ class Population:
 # -------------------------------------------------
 
 	def trigger_fitness_calculation(self):
-		print("-- trigger fitness calculation --")
+		verbose_print("-- trigger fitness calculation --")
 		for e in self.entities:
 			e.calculate_fitness()
 
 	def natural_selection(self):
-		print("\nNatural Selection")
+		verbose_print("\nNatural Selection")
 		self.best_entity = self.get_best_entity()
 		new_gen = [self.clone(self.best_entity)]
 
@@ -91,6 +93,7 @@ class Population:
 
 		self.best_score_history += [self.best_entity.score]
 		self.entities = new_gen
+		self.gen += 1
 	
 	def get_best_entity(self):
 		max = 0
@@ -108,10 +111,10 @@ class Population:
 		minimum_score -= minimum_score*random.random()
 		for e in self.entities:
 			if e.score > minimum_score:
-				print(f"suitor {e.name} : score = {e.score}")
+				verbose_print(f"suitor {e.name} : score = {e.score}")
 				return e
 
-		print("return best as default !!!!!!!")
+		verbose_print("return best as default !!!!!!!")
 		return self.best_entity
 
 # -------------------------------------------------
@@ -141,9 +144,14 @@ def test():
 	p = Population(world, pop_size)
 
 	while p.gen < gen_max:
-		print(world, "Gen: ", p.gen)
+		verbose_print(world, "Gen: ", p.gen)
 		p.run_generation()
 		p.natural_selection()
+
+# -------------------------------------------------
+
+
+verbose_print = print if VERBOSE else lambda *a, **k: None
 
 
 if __name__ == '__main__':
