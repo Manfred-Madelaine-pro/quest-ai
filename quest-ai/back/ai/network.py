@@ -1,11 +1,11 @@
 
 try:
 	import matrix
-	VERBOSE = True
 except ImportError:
 	from ai import matrix 
-	VERBOSE = False
 
+
+VERBOSE = __name__ != '__main__'
 
 
 class Network:

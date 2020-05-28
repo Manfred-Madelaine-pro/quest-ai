@@ -7,7 +7,7 @@ VERBOSE = __name__ != '__main__'
 MAX_WATER = 10
 MAX_PLANT = 10
 
-BEING_INITIAL_WATER = 3
+BEING_INITIAL_WATER = 1
 
 UP = (0,-1)
 DOWN = (0,1)

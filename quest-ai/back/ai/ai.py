@@ -1,3 +1,5 @@
+from functools import reduce
+
 try:
 	import generic_ai
 except ImportError:
@@ -5,8 +7,23 @@ except ImportError:
 	from back import entity 
 
 
+SELF_AWARENESS = ['pos_x', 'pos_y', 'water_lvl']
+VISION = ['up', 'down', 'current', 'left', 'right']
+CAPTORS_TYPE = ['water']
+
+CONSCIOUSNESS = SELF_AWARENESS
+CONSCIOUSNESS += reduce(lambda x, y: x+y, [list(map(lambda v: f"{c} {v}", VISION)) for c in CAPTORS_TYPE])
+
+
+CAPTORS = len(CONSCIOUSNESS)
+CHOICES = len(VISION) + len(CAPTORS_TYPE)
+NEURONES = 10
+LAYER = 2
+
+
 class AI(generic_ai.GenericAI, entity.Being):
-	def __init__(self, world, x=0, y=0, name=None, captors=4, neurones=4, choices=5, layer=2):
+	def __init__(self, world, x=0, y=0, name=None, 
+			captors=CAPTORS, neurones=NEURONES, choices=CHOICES, layer=LAYER):
 		generic_ai.GenericAI.__init__(self, captors, neurones, choices, layer)
 		
 		if name: self.name = name
@@ -32,18 +49,22 @@ class AI(generic_ai.GenericAI, entity.Being):
 		self.water -= 1
 
 	def act(self, choice):
-		switch_case = {
+		possible_actions = {
         	0 : self.up,
         	1 : self.down,
         	2 : self.left,
         	3 : self.right,
         	4 : self.idle,
         	5 : self.drink,
-        }
-		switch_case.get(choice, self.idle)()
+    	}
+		possible_actions.get(choice, self.idle)()
 
-	# def gather_data(self):
-	# 	pass
+	def gather_data(self):
+		# print(self.world)
+
+		collected_data = [_ for _ in range(self.captors)]
+		# predict best action ?
+		return collected_data
 
 # -------------------------------------------------
 
@@ -55,7 +76,7 @@ class AI(generic_ai.GenericAI, entity.Being):
 		print(f"{self} stayed idle !")
 
 	def drink(self):
-		print(f"{self} drank !")
+		print(f"{self} drank {'!'*10}")
 
 # -------------------------------------------------
 	

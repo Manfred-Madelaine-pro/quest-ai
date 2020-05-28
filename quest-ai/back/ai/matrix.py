@@ -3,7 +3,7 @@ import random
 import numpy as np
 
 
-VERBOSE = False
+VERBOSE = __name__ == '__main__'
 
 
 class Matrix:
