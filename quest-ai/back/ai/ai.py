@@ -1,3 +1,4 @@
+import operator
 from functools import reduce
 
 try:
@@ -7,16 +8,22 @@ except ImportError:
 	from back import entity 
 
 
+UP = (0,-1)
+DOWN = (0,1)
+LEFT = (-1,0)
+RIGHT = (0,1)
+CURRENT = (0,0)
+
 SELF_AWARENESS = ['pos_x', 'pos_y', 'water_lvl']
-VISION = ['up', 'down', 'current', 'left', 'right']
+VISIONS = [UP, DOWN, CURRENT, LEFT, RIGHT]
 CAPTORS_TYPE = ['water']
 
 CONSCIOUSNESS = SELF_AWARENESS
-CONSCIOUSNESS += reduce(lambda x, y: x+y, [list(map(lambda v: f"{c} {v}", VISION)) for c in CAPTORS_TYPE])
+CONSCIOUSNESS += reduce(lambda x, y: x+y, [list(map(lambda v: f"{v}: {c}", VISIONS)) for c in CAPTORS_TYPE])
 
 
 CAPTORS = len(CONSCIOUSNESS)
-CHOICES = len(VISION) + len(CAPTORS_TYPE)
+CHOICES = len(VISIONS) + len(CAPTORS_TYPE)
 NEURONES = 10
 LAYER = 2
 
@@ -40,12 +47,7 @@ class AI(generic_ai.GenericAI, entity.Being):
 # -------------------------------------------------
 
 	def action(self):
-		near_data = self.gather_data()
-		analysis = self.analyse(near_data)
-		thoughts = self.think(analysis)
-		choice = self.choose(thoughts)
-		
-		self.move(choice) if choice < 4 else self.idle()
+		generic_ai.GenericAI.action(self)
 		self.water -= 1
 
 	def act(self, choice):
@@ -57,14 +59,27 @@ class AI(generic_ai.GenericAI, entity.Being):
         	4 : self.idle,
         	5 : self.drink,
     	}
-		possible_actions.get(choice, self.idle)()
+		if choice < 4 :
+			self.move(choice)
+		else:
+			possible_actions.get(choice, self.idle)()
+
+# -------------------------------------------------
 
 	def gather_data(self):
-		# print(self.world)
+		self_awareness = [self.x, self.y, self.water]
+		surroundings_data = self.inspect_surroundings()
+		return self_awareness + surroundings_data
 
-		collected_data = [_ for _ in range(self.captors)]
-		# predict best action ?
-		return collected_data
+	def inspect_surroundings(self):
+		surroundings = []
+		for vision in VISIONS:
+			neighbourg = tuple(map(operator.add, (self.x, self.y), vision))
+			if not self.world.out_of_boud(*neighbourg):
+				surroundings += [self.world.cells[neighbourg].water]
+			else:
+				surroundings += [0]
+		return surroundings
 
 # -------------------------------------------------
 
@@ -77,6 +92,8 @@ class AI(generic_ai.GenericAI, entity.Being):
 
 	def drink(self):
 		print(f"{self} drank {'!'*10}")
+		entity.Being.drink(self)
+
 
 # -------------------------------------------------
 	
