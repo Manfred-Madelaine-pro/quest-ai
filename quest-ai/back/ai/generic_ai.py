@@ -7,6 +7,9 @@ except ImportError:
 	from back import entity
 
 
+VERBOSE = __name__ == '__main__'
+
+
 class GenericAI:
 	def __init__(self, captors=4, neurones=4, choices=5, layer=2):
 		self.score = 0
@@ -88,7 +91,7 @@ class GenericAI:
 	def choose(self, choices):
 		# handle indecision
 		if len(choices) > 1:
-			print(f"\t{self.name} is facing a dilemma !")
+			verbose_print(f"\t{self.name} is facing a dilemma !")
 			return random.choice(choices)
 		return choices[0]
 
@@ -105,20 +108,20 @@ class GenericAI:
 		switch_case.get(choice, self.idle)()
 
 	def up(self):
-		print("move up !")
+		verbose_print("move up !")
 	def down(self):
-		print("move down !")
+		verbose_print("move down !")
 	def left(self):
-		print("move left !")
+		verbose_print("move left !")
 	def right(self):
-		print("move right !")
+		verbose_print("move right !")
 	def idle(self):
-		print("stay idle !")
+		verbose_print("stay idle !")
 
 # -------------------------------------------------
 
 	def mutate(self, mutation_rate):
-		print(f"{self} mutate !")
+		verbose_print(f"{self} mutate !")
 		self.brain.mutate(mutation_rate)
 
 	def crossover(self, parent):
@@ -135,9 +138,12 @@ class GenericAI:
 
 	def calculate_fitness(self):
 		self.score += self.year*1
-		print(f"{self.name} : fitness = {round(self.score, 4)}")
+		verbose_print(f"{self.name} : fitness = {round(self.score, 4)}")
 
 # -------------------------------------------------
+
+
+verbose_print = print if VERBOSE else lambda *a, **k: None
 
 
 if __name__ == '__main__':

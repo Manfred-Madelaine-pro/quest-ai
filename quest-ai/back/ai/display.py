@@ -5,6 +5,22 @@ except ImportError:
 	from ai import matrix 
 
 
+def h_flat_arrangement(*args):
+	txt = ''
+	for mat in args:
+		if len(txt) > 0 : txt += '\n'
+		txt += mat.get_name() + '\t: '
+		for r in range(mat.nb_row):
+			for c in range(mat.nb_col):
+				txt += f'{round(mat.matrix[(r,c)], 2):5}'
+	return txt
+
+# -------------------------------------------------
+
+def h_arrangement(*args):
+	grid = store_values_in_grid(*args)
+	return to_string(grid)
+
 def store_values_in_grid(*args):
 	grid = []
 	titles = []
@@ -12,19 +28,14 @@ def store_values_in_grid(*args):
 
 	for mat in args:
 		titles += [f"{mat.name} ({mat.nb_row}, {mat.nb_col})"]
-		lines = mat.get_lines_str()
 
+		lines = mat.get_lines_str()
 		for r in range(max_row):
 			if r >= len(grid):
 				grid += [[]]
 			grid[r] += lines[r] if (r < len(lines)) else [' '*8]
 
 	return [titles] + grid
-
-def h_arrangement(*args):
-	grid = store_values_in_grid(*args)
-	return to_string(grid)
-
 
 def to_string(grid):
 	txt = ''
@@ -37,7 +48,16 @@ def to_string(grid):
 
 # -------------------------------------------------
 
-def test(input, output):
+def horizontal_test2(input, output):
+	input_array = [i for i in range(input)]
+	output_array = [i for i in range(output)]
+
+	input_matrix = matrix.array_to_single_col_matrix(input_array)
+	output_matrix = matrix.array_to_single_col_matrix(output_array)
+
+	print(h_flat_arrangement(input_matrix, output_matrix))
+
+def horizontal_test(input, output):
 	input_array = [i for i in range(input)]
 	output_array = [i for i in range(output)]
 
@@ -52,4 +72,4 @@ if __name__ == '__main__':
 	test_args = [(3, 3), (10, 5), (5, 10)]
 	# test_args = [(2, 3)]
 	for args in test_args:
-		test(*args)
+		horizontal_test2(*args)

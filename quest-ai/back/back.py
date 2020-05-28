@@ -2,11 +2,13 @@ import random
 
 try:
 	import entity
+	import population
 except ImportError:
 	from back import entity
+	from back import population
 
 
-VERBOSE = False
+VERBOSE = __name__ == '__main__'
 
 
 class GenericGrid:
@@ -50,7 +52,7 @@ class GenericGrid:
 class Model(GenericGrid):
 	def __init__(self, width, length, conf={}):
 		super().__init__(width, length)
-		self.nb_entities = conf['nb_entities'] if conf else 2
+		self.population_size = conf['nb_entities'] if conf else 2
 		self.init_life()
 
 	def init_cells(self):
@@ -60,22 +62,7 @@ class Model(GenericGrid):
 
 	def init_life(self):
 		self.generate_cells()
-		self.generate_beings()
-
-# --------------------------------------------------------------------------
-
-	def generate_beings(self):
-		self.beings = {}
-		self.dead_names = []
-
-		for i in range(self.nb_entities):
-			x, y = self.get_random_pos()
-			self.beings[i] = entity.Being(i, x, y, self)
-
-	def get_random_pos(self):
-		x = random.randint(0, self.width-1)
-		y = random.randint(0, self.length-1)
-		return x, y
+		self.population = population.Population(self, self.population_size)
 
 # --------------------------------------------------------------------------
 
@@ -87,56 +74,74 @@ class Model(GenericGrid):
 		self.is_complete = True
 
 	def update(self):
-		verbose_print(f'---- turn : {self.turn} ----')
-		self.remove_beings()
-		self.dead_names = []
+		verbose_print(f'\t-- Generation : {self.population.gen} --')
+		verbose_print(self, f"Gen: {self.population.gen}\n")
+		self.population.run_generation()
 
-		self.update_beings()
-		# self.update_cells() TODO
+	def next_generation(self):
+		self.population.natural_selection()
+		self.generate_cells()
+		# self.stop()
+
 		self.turn += 1
-
-# --------------------------------------------------------------------------
-
-	def update_beings(self):
-		for being in self.beings.values():
-			being.update()
-
-			if not being.alive:
-				self.register_dead_being(being)
-
-		if len(self.beings) == 0:
-			self.stop()
-
-	def register_dead_being(self, being):
-		self.dead_names += [being.u_name]
-
-	def remove_beings(self):
-		for name in self.dead_names:
-			dead = self.beings.pop(name)
 
 # --------------------------------------------------------------------------
 
 
 verbose_print = print if VERBOSE else lambda *a, **k: None
 
-def test_Grid():
-	width = 2
-	grid = GenericGrid(width, width)
-	grid.generate_cells()
-	print(grid)
-
 def test_Model():
-	width = 5
-	length = width
-	model = Model(width, length)
-	print(model)
+	width = 10
+	conf = {'nb_entities': 3}
+	model = Model(width, width, conf=conf)
 
-	for i in range(5):
+	max_gen = 100
+	while model.population.gen < max_gen:
 		model.update()
-		print(model)
+		model.next_generation()
+
+	print(model.population.gen)
+	print(model.population.best_score_history)
+	m = max(model.population.best_score_history)
+	print(model.population.best_entity, model.population.best_entity.year, 'VS', m)
+
+	# graph
+	import numpy as np
+	from matplotlib import pyplot as plt
+	plt.style.use('seaborn-darkgrid')
+
+	def plot_sorted_curve(x, total):
+		tab = f'{"-"*20}\n'
+		txt =  f'min: {min(x)}\n'
+		txt += f'max: {max(x)}\n'
+		txt += f'range: {np.ptp(x)}\n'
+		txt += tab
+		txt += f'mean: {np.mean(x):.2f}\n'
+		txt += f'median : {np.median (x)}\n'
+		txt += tab
+		txt += f'sum: {np.sum(x)}\n'
+		txt += f'var: {np.var(x):.2f}\n'
+		txt += f'std: {np.std(x):.2f}\n'
+
+
+		f = plt.figure('Best score per generation')
+		plt.plot(x)
+
+		plt.title(f"Population's best score for each generation (total gen={total})")
+		plt.ylabel("Best score")
+		plt.xlabel("Generation")
+
+		plt.text(0.05, 0.95, txt, 
+			ha='left', va='top', fontsize=12, 
+			transform=plt.gca().transAxes,
+			bbox=dict(facecolor='white', alpha=0.5))
+		plt.show()
+		# Add some stats
+
+
+	plot_sorted_curve(model.population.best_score_history, model.population.gen)
 
 
 if __name__ == '__main__':
-	test_Grid()
 	test_Model()
 
