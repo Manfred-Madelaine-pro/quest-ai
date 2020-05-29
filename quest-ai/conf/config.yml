@@ -3,7 +3,7 @@
 ---
 
 main:
-  width: &id_1 20
+  width: &id_1 10
   length: *id_1
 
 front:

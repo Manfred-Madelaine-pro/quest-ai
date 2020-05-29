@@ -1,7 +1,7 @@
 import random
 
 
-VERBOSE = __name__ == '__main__'
+VERBOSE = __name__ != '__main__'
 
 
 MAX_WATER = 10
@@ -112,6 +112,7 @@ class Being (Entity):
 
 	def is_dead(self, reason='is dead'):
 		self.alive = False
+		self.death_cause = reason
 		verbose_print(f"\t{self.u_name} {reason} at the age of {self.year}.")
 
 # -------------------------------------------------

@@ -10,6 +10,7 @@ except ImportError:
 	from front import colors
 
 
+	
 class Front(screen.GenericScreen):
 
 	def __init__(self, back_model, width, length, conf={}):
@@ -59,18 +60,30 @@ class Front(screen.GenericScreen):
 # --------------------------------------------------------------------------
 
 	def draw_beings(self):
+		# self.back_model.update()
+		# self.back_model.next_generation()
+		for being in self.back_model.population.entities:
+			if not being.alive:
+				self.remove_beings(id(being))
+			elif id(being) not in self.front_beings:
+				self.create_beings(being)
+			else:
+				self.change_pos(id(being), being.x, being.y)
+
+	def draw_beings_old(self):
 		for being in self.back_model.beings.values():
 			if being.u_name in self.back_model.dead_names:
 				self.remove_beings(being.u_name)
 			elif being.u_name not in self.front_beings:
 				self.create_beings(being)
 			else:
-				self.change_pos(being.u_name, being.x, being.y)
+				self.change_pos(id(being), being.x, being.y)
 
-	def remove_beings(self, u_name):
-		print(f"Removed {u_name}!")
-		self.canvas.delete(self.front_beings[u_name])
-		del self.front_beings[u_name]
+	def remove_beings(self, uid):
+		if uid in self.front_beings:
+			print(f"Removed {uid}!")
+			self.canvas.delete(self.front_beings[uid])
+			del self.front_beings[uid]
 
 	def create_beings(self, being):
 		front_x, front_y = self.get_front_pos(being.x, being.y)
@@ -81,7 +94,8 @@ class Front(screen.GenericScreen):
 			front_y + self.being_size,
 			fill=self.get_being_color()
 		)
-		self.front_beings[being.u_name] = being_id
+		print(f"Add {id(being)}!")
+		self.front_beings[id(being)] = being_id
 	
 	def get_being_color(self):
 		return colors.random_color_in_list([colors.RED, colors.YELLOW])
@@ -91,12 +105,12 @@ class Front(screen.GenericScreen):
 	def get_front_pos(self, x, y):
 		return x*self.being_step, y*self.being_step
 
-	def change_pos(self, u_name, new_x, new_y):
-		old_x, old_y, old_x2, old_y2 = self.canvas.coords(self.front_beings[u_name])
+	def change_pos(self, uid, new_x, new_y):
+		old_x, old_y, old_x2, old_y2 = self.canvas.coords(self.front_beings[uid])
 		front_x, front_y = self.get_front_pos(new_x, new_y)
 		
 		d_x, d_y = self.get_delta_pos(old_x, old_y, front_x, front_y)
-		self.canvas.move(self.front_beings[u_name], d_x, d_y)
+		self.canvas.move(self.front_beings[uid], d_x, d_y)
 
 	def get_delta_pos(self, old_x, old_y, new_x, new_y):
 		return new_x - old_x, new_y - old_y

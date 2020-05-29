@@ -2,7 +2,10 @@
 try:
 	import matrix
 except ImportError:
-	from ai import matrix 
+	try:
+		from ai import matrix 
+	except ImportError:
+		from back.ai import matrix 
 
 
 def h_flat_arrangement(*args):

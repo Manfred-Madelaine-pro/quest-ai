@@ -1,14 +1,18 @@
+import inspect
 import operator
 from functools import reduce
 
 try:
 	import generic_ai
 except ImportError:
-	from ai import generic_ai 
 	from back import entity 
+	try:
+		from ai import generic_ai 
+	except ImportError:
+		from back.ai import generic_ai 
 
 
-VERBOSE = __name__ == '__main__'
+VERBOSE = __name__ != '__main__'
 
 # TODO clean
 
@@ -39,6 +43,8 @@ class AI(generic_ai.GenericAI, entity.Being):
 		
 		if name: self.name = name
 		entity.Being.__init__(self, self.name, x, y, world)
+
+		self.all_actions = []
 		
 	def __str__(self):
 		return entity.Being.__str__(self)
@@ -89,16 +95,20 @@ class AI(generic_ai.GenericAI, entity.Being):
 	def move(self, direction_id):
 		direction = self.pick_direction(direction_id)
 		self.step(direction)
+		self.save_action()
 		return 1
-
 
 	def idle(self):
 		verbose_print(f"{self} stayed idle !")
+		self.save_action()
 		return 1
 
 	def drink(self):
+		self.save_action()
 		return entity.Being.drink(self)
 
+	def save_action(self):
+		self.all_actions += [inspect.stack()[1][3]]
 
 # -------------------------------------------------
 	
