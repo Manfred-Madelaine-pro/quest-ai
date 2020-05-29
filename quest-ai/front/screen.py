@@ -44,12 +44,16 @@ class GenericScreen:
 		self.update()
 
 		# callback
-		if not self.back_model.is_complete:
+		if self.back_model.is_livingful:
 			self.f.after(self.refresh_delay, self.update_screen)
 
 
 	def init_world(self):
 		pass
+
+	def run(self):
+		return True
+
 	def update(self):
 		pass
 

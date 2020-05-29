@@ -3,8 +3,12 @@ try:
 	import matrix
 	import display
 except ImportError:
-	from ai import matrix 
-	from ai import display 
+	try:
+		from ai import matrix 
+		from ai import display 	
+	except ImportError:
+		from back.ai import matrix 
+		from back.ai import display 	
 
 
 VERBOSE = __name__ == '__main__'

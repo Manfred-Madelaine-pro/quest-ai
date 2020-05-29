@@ -3,8 +3,11 @@ import random
 try:
 	import network
 except ImportError:
-	from ai import network 
 	from back import entity
+	try:
+		from ai import network
+	except ImportError:
+		from back.ai import network
 
 
 VERBOSE = __name__ == '__main__'

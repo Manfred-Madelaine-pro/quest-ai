@@ -1,7 +1,12 @@
 import random
 
-import name
-from ai.ai import *
+try:
+	import name
+	from ai.ai import *
+except ImportError:
+	from back import name
+	from back.ai.ai import *
+
 
 
 VERBOSE = __name__ == '__main__'
@@ -15,6 +20,7 @@ class Population:
 		self.mutation_rate = mutation_rate
 
 		self.create_first_settlers()
+		self.drop_entities_on_world()
 
 	def __str__(self):
 		return '\n'.join([str(e) for e in self.entities])
@@ -23,34 +29,22 @@ class Population:
 
 	def create_first_settlers(self):
 		self.gen = 0
-		self.best_entity = None
-		self.best_score_history = []
+		self.init_history()		
+
 		name_handler = name.Names()
 		settlers = []
 		for _ in range(self.size):
 			settlers += [AI(self.world, name=name_handler.baptise())]
 		self.entities = settlers
 
-	def healthy_generation(self):
-		for e in self.entities:
-			if e.alive:
-				return True
-		return False
+	def init_history(self):
+		self.best_entity = None
+		self.death_history = []
+		self.best_score_history = []
+		self.best_action_history = []
 
-# -------------------------------------------------
-
-	def run_generation(self):
+	def drop_entities_on_world(self):
 		self.turn = 0
-		self.entities_drop_on_world()
-
-		while self.healthy_generation():
-			self.update()
-
-		verbose_print("\n\t/!\\ Generation extinction /!\\\n")
-		self.trigger_fitness_calculation()
-		# best score
-
-	def entities_drop_on_world(self):
 		for e in self.entities:
 			e.x, e.y = self.get_random_pos()
 
@@ -67,34 +61,80 @@ class Population:
 		for e in self.entities: 
 			e.turn()
 			verbose_print('')
-		self.turn += 1
 
-	# not used...
-	def mutate(self):
+		if self.extinction():
+			verbose_print("\n\t/!\\ Generation extinction /!\\\n")
+			self.collect_data()
+			self.world.stop()
+		else:
+			self.turn += 1
+
+	def extinction(self):
 		for e in self.entities:
-			e.mutate()
+			if e.alive:
+				return False
+		return True
 
 # -------------------------------------------------
+
+	def collect_data(self):
+		self.trigger_fitness_calculation()
+		self.history()
 
 	def trigger_fitness_calculation(self):
 		verbose_print("-- trigger fitness calculation --")
 		for e in self.entities:
 			e.calculate_fitness()
+		self.best_entity = self.get_best_entity()
+		
 
+# -------------------------------------------------
+
+	def history(self):
+		self.best_score_history += [self.best_entity.score]
+		self.death_history += [self.collect_cause_of_death()]
+
+		# self.action_history += [self.collect_actions()]
+		self.best_action_history += self.best_entity.all_actions
+
+	def print_history(self):
+		print("Gen :", self.gen)
+
+		print(self.best_score_history)
+		print(self.death_history)
+		print(self.best_action_history)
+		print("fin")
+
+	def collect_cause_of_death(self):
+		deaths = {}
+		for e in self.entities:
+			deaths[e.death_cause] = deaths.get(e.death_cause, 0) + 1 
+		return deaths
+
+	# Deprec
+	def collect_actions(self):
+		actions = []
+		for e in self.entities:
+			actions += e.all_actions
+		return actions
+
+# -------------------------------------------------
+			
+	def next(self):
+		new_gen = self.natural_selection()
+		self.entities = new_gen
+		self.gen += 1
+	
 	def natural_selection(self):
 		verbose_print("\nNatural Selection")
-		self.best_entity = self.get_best_entity()
 		new_gen = [self.clone(self.best_entity)]
 
 		for i in range(1, self.size):
 			mother = self.get_a_parent()
 			father = self.get_a_parent()
 			new_gen += [self.crossover(mother, father)]
+		return new_gen
 
-		self.best_score_history += [self.best_entity.score]
-		self.entities = new_gen
-		self.gen += 1
-	
 	def get_best_entity(self):
 		max = 0
 		best = None

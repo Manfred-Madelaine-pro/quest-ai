@@ -8,7 +8,7 @@ except ImportError:
 	from back import population
 
 
-VERBOSE = __name__ == '__main__'
+VERBOSE = __name__ != '__main__'
 
 
 class GenericGrid:
@@ -56,8 +56,7 @@ class Model(GenericGrid):
 		self.init_life()
 
 	def init_cells(self):
-		self.turn = 0
-		self.is_complete = False
+		self.is_livingful = True
 		super().init_cells()
 
 	def init_life(self):
@@ -67,23 +66,23 @@ class Model(GenericGrid):
 # --------------------------------------------------------------------------
 
 	def start(self):
-		self.is_complete = False
+		self.is_livingful = True
 
 	def stop(self):
 		verbose_print("End Simulation.")
-		self.is_complete = True
+		self.is_livingful = False
 
 	def update(self):
 		verbose_print(f'\t-- Generation : {self.population.gen} --')
-		verbose_print(self, f"Gen: {self.population.gen}\n")
-		self.population.run_generation()
+		# verbose_print(self)
+		self.population.update()
+		# update grid : rain
 
 	def next_generation(self):
-		self.population.natural_selection()
+		self.population.next()
 		self.generate_cells()
 		# self.stop()
 
-		self.turn += 1
 
 # --------------------------------------------------------------------------
 
@@ -95,12 +94,12 @@ def test_Model():
 	conf = {'nb_entities': 3}
 	model = Model(width, width, conf=conf)
 
-	max_gen = 100
+	max_gen = 10
 	while model.population.gen < max_gen:
 		model.update()
-		model.next_generation()
+	model.next_generation()
 
-	print(model.population.gen)
+	model.population.print_history()
 	print(model.population.best_score_history)
 	m = max(model.population.best_score_history)
 	print(model.population.best_entity, model.population.best_entity.year, 'VS', m)
