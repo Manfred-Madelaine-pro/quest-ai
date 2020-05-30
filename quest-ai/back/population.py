@@ -9,7 +9,7 @@ except ImportError:
 
 
 
-VERBOSE = __name__ == '__main__'
+VERBOSE = __name__ != '__main__'
 
 
 class Population:
@@ -124,6 +124,8 @@ class Population:
 		new_gen = self.natural_selection()
 		self.entities = new_gen
 		self.gen += 1
+		self.drop_entities_on_world()
+		
 	
 	def natural_selection(self):
 		verbose_print("\nNatural Selection")

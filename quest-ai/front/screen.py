@@ -21,7 +21,6 @@ class GenericScreen:
 
 
 	def create_access_buttons(self):
-
 		def create_button(f, txt, command, s):
 			b = Button(f, text=txt, command=command)
 			b.pack(side=s, padx=5, pady=5)
@@ -50,9 +49,6 @@ class GenericScreen:
 
 	def init_world(self):
 		pass
-
-	def run(self):
-		return True
 
 	def update(self):
 		pass

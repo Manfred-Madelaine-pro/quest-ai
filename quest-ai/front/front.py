@@ -10,7 +10,7 @@ except ImportError:
 	from front import colors
 
 
-	
+
 class Front(screen.GenericScreen):
 
 	def __init__(self, back_model, width, length, conf={}):
@@ -115,7 +115,6 @@ class Front(screen.GenericScreen):
 	def get_delta_pos(self, old_x, old_y, new_x, new_y):
 		return new_x - old_x, new_y - old_y
 
-
 # ---------------------------------------------------------
 
 	def draw_cells(self):
@@ -129,14 +128,12 @@ class Front(screen.GenericScreen):
 				else:
 					self.change_color(i, j, colors.BROWN)
 
-
 	def change_color(self, row, column, color_hue, rand=False):
 		if rand:
 			color_hex = colors.get_color_with_random_lightness(color_hue)
 		else:
 			color_hex = colors.get_hex(color_hue)
 		self.canvas.itemconfig(self.front_cells[(row, column)], fill=color_hex)
-
 
 # ---------------------------------------------------------
 

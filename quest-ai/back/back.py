@@ -67,6 +67,8 @@ class Model(GenericGrid):
 
 	def start(self):
 		self.is_livingful = True
+		if self.population.turn > 0:
+			self.next_generation()
 
 	def stop(self):
 		verbose_print("End Simulation.")
@@ -79,8 +81,8 @@ class Model(GenericGrid):
 		# update grid : rain
 
 	def next_generation(self):
-		self.population.next()
 		self.generate_cells()
+		self.population.next()
 		# self.stop()
 
 
