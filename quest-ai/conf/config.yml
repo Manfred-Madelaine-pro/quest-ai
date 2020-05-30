@@ -3,7 +3,7 @@
 ---
 
 main:
-  width: &id_1 10
+  width: &id_1 20
   length: *id_1
 
 front:
@@ -14,4 +14,4 @@ front:
 
 back:
   verbose: true
-  nb_entities: 5
+  nb_entities: 10

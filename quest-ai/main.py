@@ -14,7 +14,6 @@ class QuestAI:
 		Front(back_model, *main_args, conf=front_conf) 	
 
 
-
 if __name__ == '__main__':
 	config_file = "conf/config.yml"
 	global_conf = global_config(config_file)
