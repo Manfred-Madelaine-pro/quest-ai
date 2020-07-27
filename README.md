@@ -1,6 +1,6 @@
 # Quest AI
 
-A medium project where we play in a simulated and simplified world with different types of AI.
+A medium project where we little things evolve in a simulated and simplified world, wile trying to survive.
 
 ![Quest AI gif](img/quest_ai.gif)
 
