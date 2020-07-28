@@ -1,21 +1,35 @@
-# Quest AI
+# Quest AI :earth_africa:
 
-A medium project where we little things evolve in a simulated and simplified world, wile trying to survive.
+A medium project where little things evolve in a simulated and simplified world, while trying to survive world climate changes.
 
 ![Quest AI gif](img/quest_ai.gif)
 
+## Dependencies :package:
+Note that following libraries are used in the project, thus are required on your machine if you want to run it :
+   ```
+   tkinter
+   matplotlib
+   numpy
+   pyyaml
+   ```
 
-## quick start
-pip install pyyaml
+## quick start :rocket:
 
-## world building
-rules
-rain
+1. Install all dependencies
+1. Then run :
+   ```
+   python3 main.py
+   ```
 
-## Data Model
+## world building :seedling:
+:building_construction: rules
+
+Rain occures randomly on small part of the map and provide a natural world's water supply.
+
+## Data Model :books:
 ![Quest AI - Data Model](img/data_model.PNG)
 
-## AI types
+## AI types :robot:
 
 As for entities, we have implemented the following ones :
 
@@ -25,7 +39,7 @@ As for entities, we have implemented the following ones :
 1. A __Carnivorous AI__ which have same options as __Herbivorous AI__, but can also eat other "species".
 1. A __Cannibal AI__, the most dangerous one, can devour everything near it.
 
-## Display
+## Display :sparkles:
 An example of Neural Network viewed from the console log :
 ```
 $ py back/ai/network.py
