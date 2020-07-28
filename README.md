@@ -21,10 +21,9 @@ Note that following libraries are used in the project, thus are required on your
    python3 main.py
    ```
 
-## world building :seedling:
-:building_construction: rules
+## :building_construction: world building :seedling:
 
-Rain occures randomly on small part of the map and provide a natural world's water supply.
+Rain :cloud_with_rain: occures randomly on small part of the map and provide a natural world's water supply.
 
 ## Data Model :books:
 ![Quest AI - Data Model](img/data_model.PNG)
