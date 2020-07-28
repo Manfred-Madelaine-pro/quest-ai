@@ -7,9 +7,9 @@ A medium project where little things evolve in a simulated and simplified world,
 ## Dependencies :package:
 Note that following libraries are used in the project, thus are required on your machine if you want to run it :
    ```
+   numpy
    tkinter
    matplotlib
-   numpy
    pyyaml
    ```
 
