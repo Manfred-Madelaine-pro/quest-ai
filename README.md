@@ -26,6 +26,7 @@ Note that following libraries are used in the project, thus are required on your
 Rain :cloud_with_rain: occures randomly on small part of the map and provide a natural world's water supply.
 
 ## Data Model :books:
+
 ![Quest AI - Data Model](img/data_model.PNG)
 
 ## AI types :robot:
