@@ -19,7 +19,7 @@ VERBOSE = __name__ != '__main__'
 UP = (0,-1)
 DOWN = (0,1)
 LEFT = (-1,0)
-RIGHT = (0,1)
+RIGHT = (1,0)
 CURRENT = (0,0)
 
 SELF_AWARENESS = ['pos_x', 'pos_y', 'water_lvl']
