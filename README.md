@@ -1,6 +1,6 @@
 # Quest AI :earth_africa:
 
-A medium project where little things evolve in a simulated and simplified world, while trying to survive, as long as possible, world climate changes.
+A medium project where little things evolve in a simulated and simplified world, while trying to survive as long as possible to world climate changes.
 
 ![Quest AI gif](img/quest_ai.gif)
 
